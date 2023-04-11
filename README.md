@@ -1,2 +1,2 @@
-# setmas
-Software Engineering term project
+# SeTMaS
+Term project for SWE course at IIT Hyderabad.
