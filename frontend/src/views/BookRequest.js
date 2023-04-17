@@ -25,8 +25,8 @@ function Book() {
   var val = 3;
   const handleChange = (value) => {console.log(value);}
   const [roomstate, setRoomState] = React.useState("Default Room");
-  const [csCheck, setCsCheck] = React.useState(false);
-  const [aiCheck, setAiCheck] = React.useState(false);
+  const [csCheck, setCSCheck] = React.useState(false);
+  const [aiCheck, setAICheck] = React.useState(false);
   const notificationAlertRef = React.useRef(null);  
   const notify = (e, place) => {
     var type = "danger";
@@ -161,28 +161,53 @@ function Book() {
                   </Row>
                   <Row>
                     <Col md="12">
-                      <Form>
-                      {/* <Form.Group> */}
-                        {/* <label>Seminar mailing groups to notify</label> */}
-                        <Form.Check // prettier-ignore
-                          type="switch"
-                          id="custom-switch"
-                          label="Check this switch"
+                      <Form.Group>
+                        <label>Seminar Mailing lists to Notify</label> <br  />
+                        {/* <Form.Check // prettier-ignore
+                          type='radio'
+                          id={`default`}
+                          label={`default`}
                         />
-                      </Form>
-                        {/* <Form.Check
+                        <Form.Check // prettier-ignore
                           type='checkbox'
-                          id="cse-check"
-                          checked = {!csCheck}
-                          onChange = {(e) => {
-                            console.log(e);
-                            console.log("cLICKED");
-                            setCsCheck(!e.target.checked);
-                            console.log(csCheck);
-                          }}
-                          label="CSE"
-                        /> */}
-                      {/* </Form.Group> */}
+                          id={`default`}
+                          label={`default`}
+                        />
+                        {['checkbox', 'radio'].map((type) => (
+                          <div key={`inline-${type}`} className="mb-3">
+                            <Form.Check
+                              inline
+                              label="1"
+                              name="group1"
+                              type={type}
+                              id={`inline-${type}-1`}
+                            />
+                            <Form.Check
+                              inline
+                              label="2"
+                              name="group1"
+                              type={type}
+                              id={`inline-${type}-2`}
+                            />
+                            <Form.Check
+                              inline
+                              disabled
+                              label="3 (disabled)"
+                              type={type}
+                              id={`inline-${type}-3`}
+                            />
+                          </div>
+                        ))} */}
+                        <label> 
+                        <input type="checkbox" id="cs" name="vehicle1" value={csCheck} onChange={(e) => {setCSCheck(e.target.checked)} }/>
+                          CSE 
+                        </label>
+                        <br />
+                        <label>
+                          <input type="checkbox" id="ai" name="vehicle1" value={aiCheck} onChange={(e) => { setAICheck(e.target.checked) }} />
+                          AI
+                        </label>
+                      </Form.Group>
                     </Col>
                   </Row>
                   <Row>
