@@ -3,6 +3,13 @@ from forms import  EventForm, AddAdminForm, DelAdminForm
 from flask import Flask, flash,render_template, url_for, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_dance.contrib.google import make_google_blueprint, google
+
+
+os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = '1'
+os.environ["OAUTHLIB_RELAX_TOKEN_SCOPE"] = '1'
+
+
 app = Flask(__name__)
 
 # app.app_context().push()
@@ -10,6 +17,17 @@ app = Flask(__name__)
 # db.create_all()
 #key for CSRF
 app.config['SECRET_KEY'] = 'mysecretkey'
+
+# g-outh
+# modify client id and secret values
+blueprint = make_google_blueprint(
+    client_id="901277222516-llp0nhcacp402ilf5uel4d1f8g1vut5e.apps.googleusercontent.com",
+    client_secret="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",
+    # reprompt_consent=True,
+    offline=True,
+    scope=["profile", "email"]
+)
+app.register_blueprint(blueprint, url_prefix="/login")
 
 
 ## database config ##
@@ -71,7 +89,29 @@ def create_tables():
 
 @app.route('/')
 def index():
+    return render_template('landing_page.html')
+
+@app.route('/home')
+def home():
+    resp = google.get("/oauth2/v2/userinfo")
+    assert resp.ok, resp.text
+    # email=resp.json()["email"]
+
     return render_template('homepage.html')
+
+
+@app.route('/login/google')
+def login():
+    if not google.authorized:
+        return render_template(url_for("google.login"))
+
+    resp = google.get("/oauth2/v2/userinfo")
+    assert resp.ok, resp.text
+    email=resp.json()["email"]
+
+    return render_template("homepage.html")
+
+
 
 @app.route('/booking request', methods=('GET', 'POST'))
 def booking_request():
