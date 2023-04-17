@@ -1,7 +1,6 @@
 import React from "react";
 import NotificationAlert from "react-notification-alert";
-//import TimePicker from 'react-bootstrap-time-picker';
-// import DatePicker from 'react-bootstrap-date-picker';
+import { useState } from "react";
 // react-bootstrap components
 import {
   Badge,
@@ -18,9 +17,15 @@ import {
 
 
 
-
 function Book() {
-  var test = 0;
+  const [value, setvalue] = useState(),
+    onInput = ({target:{value}}) => setvalue(value),
+    onFormSubmit = (e) => {
+          e.preventDefault()
+          console.log(value)
+          setvalue()
+        }
+  var test = 1;
   var val = 3;
   const handleChange = (value) => {console.log(value);}
   const [roomstate, setRoomState] = React.useState("Default Room");
@@ -33,7 +38,7 @@ function Book() {
       message: (
         <div>
           <div>
-            Hello and you are now welcome to <strong>Joe Biden's Pizza.</strong>
+            Hello and you are now welcome to <strong>SETMAS.</strong>
           </div>
         </div>
       ),
@@ -44,6 +49,8 @@ function Book() {
       notificationAlertRef.current.notificationAlert(options);
       e.preventDefault();
     };
+    var data = document.getElementById("testform");
+    console.log(data);
   return (
     <>
       <div>
@@ -57,7 +64,7 @@ function Book() {
                 <Card.Title as="h4">Book a Request</Card.Title>
               </Card.Header>
               <Card.Body>
-                <Form>
+                <Form onSubmit={onFormSubmit}>
                   <Row>
                     <Col className="pr-2" md="4">
                       <Form.Group>
@@ -65,9 +72,10 @@ function Book() {
                         {/* Get name from logged in user's info */}
                         <Form.Control
                           placeholder="John Doe"
+                          name = "name"
                           type="text"
                           disabled
-                          readonly
+                          readOnly
                         ></Form.Control>
                       </Form.Group>
                     </Col>
@@ -75,6 +83,9 @@ function Book() {
                       <Form.Group>
                         <label>Department</label>
                         <Form.Control
+                          onChange={onInput}
+                          name = "dept"
+                          value={value}
                           placeholder="dept"
                           type="text"
                         ></Form.Control>
@@ -87,9 +98,10 @@ function Book() {
                         </label>
                         <Form.Control
                           placeholder="johndoe@iith.ac.in"
+                          name="email"
                           type="email"
                           disabled
-                          readonly
+                          readOnly
                         ></Form.Control>
                       </Form.Group>
                     </Col>
@@ -186,12 +198,12 @@ function Book() {
                     className="btn-fill pull-right"
                     type="submit"
                     variant="default"
-                    onClick={test==1 ? (e) => e.preventDefault() :(e) => notify(e, "tc")}
+                    // onClick={test==1 ? (e) => {console.log(e.target); e.preventDefault()} :(e) => notify(e, "tc")}
                   >
                     Submit Request
                   </Button>
                   <div className="clearfix"></div>
-                </Form>
+                </Form> 
               </Card.Body>
             </Card>
           </Col>
