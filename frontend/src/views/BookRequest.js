@@ -57,9 +57,12 @@ function Book() {
                     <Col className="pr-1" md="5">
                       <Form.Group>
                         <label>Requester Name</label>
+                        {/* Get name from logged in user's info */}
                         <Form.Control
                           placeholder="John Doe"
                           type="text"
+                          disabled
+                          readonly
                         ></Form.Control>
                       </Form.Group>
                     </Col>
@@ -78,8 +81,10 @@ function Book() {
                           IITH Email Address
                         </label>
                         <Form.Control
-                          placeholder="Email"
+                          placeholder="johndoe@iith.ac.in"
                           type="email"
+                          disabled
+                          readonly
                         ></Form.Control>
                       </Form.Group>
                     </Col>
