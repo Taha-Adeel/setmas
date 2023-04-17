@@ -1,5 +1,7 @@
 import React from "react";
 import NotificationAlert from "react-notification-alert";
+//import TimePicker from 'react-bootstrap-time-picker';
+// import DatePicker from 'react-bootstrap-date-picker';
 // react-bootstrap components
 import {
   Badge,
@@ -16,8 +18,11 @@ import {
 
 
 
+
 function Book() {
   var test = 0;
+  var val = 3;
+  const handleChange = (value) => {console.log(value);}
   const [roomstate, setRoomState] = React.useState("Default Room");
   const notificationAlertRef = React.useRef(null);  
   const notify = (e, place) => {
@@ -54,7 +59,7 @@ function Book() {
               <Card.Body>
                 <Form>
                   <Row>
-                    <Col className="pr-1" md="5">
+                    <Col className="pr-2" md="4">
                       <Form.Group>
                         <label>Requester Name</label>
                         <Form.Control
@@ -63,7 +68,7 @@ function Book() {
                         ></Form.Control>
                       </Form.Group>
                     </Col>
-                    <Col className="px-1" md="3">
+                    <Col className="px-2" md="2">
                       <Form.Group>
                         <label>Department</label>
                         <Form.Control
@@ -72,7 +77,7 @@ function Book() {
                         ></Form.Control>
                       </Form.Group>
                     </Col>
-                    <Col className="pl-1" md="4">
+                    <Col className="pl-2" md="5">
                       <Form.Group>
                         <label htmlFor="exampleInputEmail1">
                           IITH Email Address
@@ -88,35 +93,43 @@ function Book() {
                     <Col className="pr-1" md="7">
                       <Form.Group>
                         <label>Date Of Seminar(dd/mm/yyyy)</label>
-                        <Form.Control
+                         <Form.Control
+                          name = "seminar date"
                           placeholder="dd/mm/yyyy"
-                          type="text"
+                          type="date"
                         >
-
-                        </Form.Control>
+                        </Form.Control> 
                       </Form.Group>
                     </Col>
                   </Row>
                   <Row>
-                    <Col className="pr-1" md="6">
+                    <Col className="pr-1" md="5">
                       <Form.Group>
                         <label>Start Time</label>
                         <Form.Control
-                          type="text"
-                        ></Form.Control>
+                          name = "seminar date"
+                          placeholder="hh:mm"
+                          type="time"
+                        >
+                        </Form.Control> 
+                        {/* <TimePicker start="10:00" end="21:00" step={30} /> */}
                       </Form.Group>
                     </Col>
-                    <Col className="px-1" md="6">
+                    <Col className="pr-1" md="5">
                       <Form.Group>
-                        <label>End Time </label>
+                        <label>End Time</label>
                         <Form.Control
-                          type="text"
-                        ></Form.Control>
+                          name = "seminar date"
+                          placeholder="hh:mm"
+                          type="time"
+                        >
+                        </Form.Control> 
+                        {/* <TimePicker start="10:00" end="21:00" step={30} /> */}
                       </Form.Group>
                     </Col>
                   </Row>
                   <Row>
-                    <Col className="px-1" md="5">
+                    <Col className="px-1" md="7">
                       <Dropdown>
                       <Dropdown.Toggle
                         as={Nav.Link}
@@ -132,8 +145,8 @@ function Book() {
                       <Dropdown.Menu>
                         <Dropdown.Item onClick={(e) => {setRoomState("ALH1");}}>ALH1</Dropdown.Item>
                         <Dropdown.Item onClick={(e) => {setRoomState("CLH2");}}>CLH2</Dropdown.Item>
-                        <Dropdown.Item onClick={(e) => console.log("mnc seminar")}>mnc.seminar@iith.ac.in</Dropdown.Item>
-                        <Dropdown.Item onClick={(e) => console.log("msme seminar")}>msme.seminar@iith.ac.in</Dropdown.Item>
+                        <Dropdown.Item onClick={(e) => {setRoomState("Auditorium");}}>Audi</Dropdown.Item>
+                        <Dropdown.Item onClick={(e) => {setRoomState("B115");}}>B115</Dropdown.Item>
                       </Dropdown.Menu>
                       </Dropdown>
                     </Col>
@@ -151,13 +164,26 @@ function Book() {
                       </Form.Group>
                     </Col>
                   </Row>
+                  <Row className="pb-2">
+                    <Col md="12">
+                      <Form.Group>
+                        <label>Details of the Seminar (Speaker Bio, Topic, Relevant Information etc.)</label>
+                        <Form.Control
+                          cols="80"
+                          placeholder="Here can be your description"
+                          rows="3"
+                          as="textarea"
+                        ></Form.Control>
+                      </Form.Group>
+                    </Col>
+                  </Row>
                   <Button
                     className="btn-fill pull-right"
                     type="submit"
                     variant="default"
                     onClick={test==1 ? (e) => e.preventDefault() :(e) => notify(e, "tc")}
                   >
-                    Update Profile
+                    Submit Request
                   </Button>
                   <div className="clearfix"></div>
                 </Form>
