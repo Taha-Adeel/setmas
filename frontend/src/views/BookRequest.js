@@ -1,5 +1,6 @@
 import React from "react";
 import NotificationAlert from "react-notification-alert";
+import MultiSelect from "react-bootstrap-multiselect";
 //import TimePicker from 'react-bootstrap-time-picker';
 // import DatePicker from 'react-bootstrap-date-picker';
 // react-bootstrap components
@@ -44,6 +45,7 @@ function Book() {
       notificationAlertRef.current.notificationAlert(options);
       e.preventDefault();
     };
+  const [seminarField, setSeminarField] = React.useState([{ value: 'One', selected: true }, { value: 'Twxdfsfo' }, { value: 'Three' }]);
   return (
     <>
       <div>
@@ -154,6 +156,14 @@ function Book() {
                         <Dropdown.Item onClick={(e) => {setRoomState("B115");}}>B115</Dropdown.Item>
                       </Dropdown.Menu>
                       </Dropdown>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col md="12">
+                      {/* <Form.Group>
+                        <label>Seminar mailing groups to notify</label>
+                        <MultiSelect data={seminarField} multiple />
+                      </Form.Group> */}
                     </Col>
                   </Row>
                   <Row>
