@@ -111,6 +111,13 @@ def login():
 
     return render_template("homepage.html")
 
+@app.route('/logout')
+def logout():
+    # Logout from google
+    google.session.clear()
+    
+    return render_template('landing_page.html')
+
 
 
 @app.route('/booking request', methods=('GET', 'POST'))
