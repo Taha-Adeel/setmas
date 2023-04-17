@@ -192,12 +192,12 @@ function Book() {
                       <Form.Group>
                         <label>Seminar Mailing lists to Notify</label> <br />
                         <label>
-                          <input type="checkbox" id="cs" name="vehicle1" value={csCheck} onChange={(e) => { setCSCheck(e.target.checked) }} />
+                          <input type="checkbox" id="cs" value={csCheck} onChange={(e) => { setCSCheck(e.target.checked) }} />
                           CSE
                         </label>
                         <br />
                         <label>
-                          <input type="checkbox" id="ai" name="vehicle1" value={aiCheck} onChange={(e) => { setAICheck(e.target.checked) }} />
+                          <input type="checkbox" id="ai" value={aiCheck} onChange={(e) => { setAICheck(e.target.checked) }} />
                           AI
                         </label>
                       </Form.Group>
@@ -208,12 +208,12 @@ function Book() {
                       <Form.Group>
                         <label>Times to set Reminder for</label> <br />
                         <label>
-                          <input type="checkbox" id="twohours" name="vehicle1" value={twoHoursCheck} onChange={(e) => { setTwoHoursCheck(e.target.checked) }} />
-                          2 hours before the start time
+                        <input type="checkbox" id="twohours" value={twoHoursCheck} onChange={(e) => { setTwoHoursCheck(e.target.checked) }} />
+                         2 hours before the start time
                         </label>
                         <br />
                         <label>
-                          <input type="checkbox" id="oneday" name="vehicle1" value={oneDayCheck} onChange={(e) => { setOneDayCheck(e.target.checked) }} />
+                          <input type="checkbox" id="oneday" value={oneDayCheck} onChange={(e) => { setOneDayCheck(e.target.checked) }} />
                           A day before the start time
                         </label>
                       </Form.Group>
