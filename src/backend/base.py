@@ -124,13 +124,13 @@ def admin_list():
     list = AdminManagement.query.all()
     return render_template('admin_list.html', list=list)
 
-@app.route('/del_admin')
+@app.route('/del_admin',  methods=('GET', 'POST'))
 def del_admin():
     form = DelAdminForm()
     if form.validate_on_submit():
         email = form.email.data
 
-        admin = AdminManagement.query.filter(AdminManagement.email == email)
+        admin = AdminManagement.query.filter(AdminManagement.email == email).first()
 
         if admin:
             db.session.delete(admin)
