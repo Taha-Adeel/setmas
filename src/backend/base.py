@@ -72,8 +72,8 @@ def booking_request():
         db.session.commit()
 
         # flash message
-        # flash("Your booking request has been submitted.")
-        return redirect(url_for('requests_list'))
+        flash("Your booking request has been submitted.")
+        return redirect(url_for('booking_request'))
 
         # show a flash message saying request submitted
     return render_template('booking_request.html', form=form)
