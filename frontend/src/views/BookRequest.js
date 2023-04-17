@@ -27,6 +27,8 @@ function Book() {
   const [roomstate, setRoomState] = React.useState("Default Room");
   const [csCheck, setCSCheck] = React.useState(false);
   const [aiCheck, setAICheck] = React.useState(false);
+  const [twoHoursCheck, setTwoHoursCheck] = React.useState(false);
+  const [oneDayCheck, setOneDayCheck] = React.useState(false);
   const notificationAlertRef = React.useRef(null);  
   const notify = (e, place) => {
     var type = "danger";
@@ -162,57 +164,6 @@ function Book() {
                   <Row>
                     <Col md="12">
                       <Form.Group>
-                        <label>Seminar Mailing lists to Notify</label> <br  />
-                        {/* <Form.Check // prettier-ignore
-                          type='radio'
-                          id={`default`}
-                          label={`default`}
-                        />
-                        <Form.Check // prettier-ignore
-                          type='checkbox'
-                          id={`default`}
-                          label={`default`}
-                        />
-                        {['checkbox', 'radio'].map((type) => (
-                          <div key={`inline-${type}`} className="mb-3">
-                            <Form.Check
-                              inline
-                              label="1"
-                              name="group1"
-                              type={type}
-                              id={`inline-${type}-1`}
-                            />
-                            <Form.Check
-                              inline
-                              label="2"
-                              name="group1"
-                              type={type}
-                              id={`inline-${type}-2`}
-                            />
-                            <Form.Check
-                              inline
-                              disabled
-                              label="3 (disabled)"
-                              type={type}
-                              id={`inline-${type}-3`}
-                            />
-                          </div>
-                        ))} */}
-                        <label> 
-                        <input type="checkbox" id="cs" name="vehicle1" value={csCheck} onChange={(e) => {setCSCheck(e.target.checked)} }/>
-                          CSE 
-                        </label>
-                        <br />
-                        <label>
-                          <input type="checkbox" id="ai" name="vehicle1" value={aiCheck} onChange={(e) => { setAICheck(e.target.checked) }} />
-                          AI
-                        </label>
-                      </Form.Group>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col md="12">
-                      <Form.Group>
                         <label>Title of the Seminar</label>
                         <Form.Control
                           cols="80"
@@ -233,6 +184,38 @@ function Book() {
                           rows="3"
                           as="textarea"
                         ></Form.Control>
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col md="12">
+                      <Form.Group>
+                        <label>Seminar Mailing lists to Notify</label> <br />
+                        <label>
+                          <input type="checkbox" id="cs" name="vehicle1" value={csCheck} onChange={(e) => { setCSCheck(e.target.checked) }} />
+                          CSE
+                        </label>
+                        <br />
+                        <label>
+                          <input type="checkbox" id="ai" name="vehicle1" value={aiCheck} onChange={(e) => { setAICheck(e.target.checked) }} />
+                          AI
+                        </label>
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col md="12">
+                      <Form.Group>
+                        <label>Times to set Reminder for</label> <br />
+                        <label>
+                          <input type="checkbox" id="twohours" name="vehicle1" value={twoHoursCheck} onChange={(e) => { setTwoHoursCheck(e.target.checked) }} />
+                          2 hours before the start time
+                        </label>
+                        <br />
+                        <label>
+                          <input type="checkbox" id="oneday" name="vehicle1" value={oneDayCheck} onChange={(e) => { setOneDayCheck(e.target.checked) }} />
+                          A day before the start time
+                        </label>
                       </Form.Group>
                     </Col>
                   </Row>
