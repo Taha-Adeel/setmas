@@ -28,17 +28,17 @@ class BookingRequest(db.Model):
     email = db.Column(db.String(80), nullable=False)
     room = db.Column(db.String(80), nullable=False)
     date = db.Column(db.String(20), nullable=False)
-    # start_time = db.Column(db.String(20), nullable=False)
-    # end_time = db.Column(db.String(20), nullable=False)
+    start_time = db.Column(db.String(20), nullable=False)
+    end_time = db.Column(db.String(20), nullable=False)
 
 
-    def __init__(self, name, email, room, date):
+    def __init__(self, name, email, room, date, start_time, end_time):
         self.name = name
         self.email = email
         self.room = room
         self.date = date
-        # self.start_time = start_time
-        # self.end_time = end_time
+        self.start_time = start_time
+        self.end_time = end_time
 
         # fill fields
 
@@ -63,11 +63,11 @@ def booking_request():
         email = form.email.data
         room = form.room.data
         date = form.date.data
-        # start_time = form.start_time.data
-        # end_time = form.end_time.data
+        start_time = str(form.start_time.data)
+        end_time = str(form.end_time.data)
 
         # add to database
-        new_request = BookingRequest(name=name, email=email, date=date, room = room)
+        new_request = BookingRequest(name=name, email=email, date=date, room = room, start_time=start_time, end_time=end_time)
         db.session.add(new_request)
         db.session.commit()
 
