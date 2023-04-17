@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="jumbotron">
+  <h1>Requests List.</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>RoomNo</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for i in requests %}
+      <tr>
+        <td>{{ i.name }}</td>
+        <td>{{ i.email }}</td>
+        <td>{{ i.room }}</td>
+        <td>{{ i.date }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
