@@ -17,7 +17,7 @@
 */
 import Dashboard from "views/Dashboard.js";
 import Book from "views/BookRequest.js";
-import TableList from "views/TableList.js";
+import AdminList from "views/AdminList.js";
 import Typography from "views/Typography.js";
 import Icons from "views/Icons.js";
 import Maps from "views/Maps.js";
@@ -39,10 +39,10 @@ const dashboardRoutes = [
     layout: "/admin"
   },
   {
-    path: "/table",
-    name: "Table List",
+    path: "/adminlist",
+    name: "Admin List",
     icon: "nc-icon nc-notes",
-    component: TableList,
+    component: AdminList,
     layout: "/admin"
   },
   {
