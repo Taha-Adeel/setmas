@@ -1,9 +1,9 @@
 import React from "react";
 import NotificationAlert from "react-notification-alert";
-import MultiSelect from "react-bootstrap-multiselect";
 //import TimePicker from 'react-bootstrap-time-picker';
 // import DatePicker from 'react-bootstrap-date-picker';
 // react-bootstrap components
+
 import {
   Badge,
   Button,
@@ -25,6 +25,8 @@ function Book() {
   var val = 3;
   const handleChange = (value) => {console.log(value);}
   const [roomstate, setRoomState] = React.useState("Default Room");
+  const [csCheck, setCsCheck] = React.useState(false);
+  const [aiCheck, setAiCheck] = React.useState(false);
   const notificationAlertRef = React.useRef(null);  
   const notify = (e, place) => {
     var type = "danger";
@@ -45,7 +47,6 @@ function Book() {
       notificationAlertRef.current.notificationAlert(options);
       e.preventDefault();
     };
-  const [seminarField, setSeminarField] = React.useState([{ value: 'One', selected: true }, { value: 'Twxdfsfo' }, { value: 'Three' }]);
   return (
     <>
       <div>
@@ -160,10 +161,28 @@ function Book() {
                   </Row>
                   <Row>
                     <Col md="12">
-                      {/* <Form.Group>
-                        <label>Seminar mailing groups to notify</label>
-                        <MultiSelect data={seminarField} multiple />
-                      </Form.Group> */}
+                      <Form>
+                      {/* <Form.Group> */}
+                        {/* <label>Seminar mailing groups to notify</label> */}
+                        <Form.Check // prettier-ignore
+                          type="switch"
+                          id="custom-switch"
+                          label="Check this switch"
+                        />
+                      </Form>
+                        {/* <Form.Check
+                          type='checkbox'
+                          id="cse-check"
+                          checked = {!csCheck}
+                          onChange = {(e) => {
+                            console.log(e);
+                            console.log("cLICKED");
+                            setCsCheck(!e.target.checked);
+                            console.log(csCheck);
+                          }}
+                          label="CSE"
+                        /> */}
+                      {/* </Form.Group> */}
                     </Col>
                   </Row>
                   <Row>
