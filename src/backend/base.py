@@ -4,6 +4,7 @@ from flask import Flask, flash,render_template, url_for, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_dance.contrib.google import make_google_blueprint, google
+import requests
 
 
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = '1'
@@ -94,8 +95,12 @@ def index():
 @app.route('/home')
 def home():
     resp = google.get("/oauth2/v2/userinfo")
-    assert resp.ok, resp.text
+    if not resp:
+        flash("You're not logged in")
+        return render_template('landing_page.html')
+    # assert resp.ok, resp.text
     # email=resp.json()["email"]
+    
 
     return render_template('homepage.html')
 
@@ -113,9 +118,17 @@ def login():
 
 @app.route('/logout')
 def logout():
-    # Logout from google
-    google.session.clear()
-    
+    if google.authorized:
+        # Get the access token from the Google credentials object
+        access_token = google.token['access_token']
+
+        # Revoke the access token by sending a POST request to the Google OAuth2 token revocation endpoint
+        requests.post('https://accounts.google.com/o/oauth2/revoke',
+                      params={'token': access_token},
+                      headers={'content-type': 'application/x-www-form-urlencoded'})
+        
+    flash("You've been logged out")
+
     return render_template('landing_page.html')
 
 

@@ -1,3 +1,16 @@
+
+{% for mess in get_flashed_messages()  %}
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close" class="fade close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        {{mess}}
+        </div>
+      {% endfor %}
+
 <h1>Home Page</h1>
 <a href="{{url_for('home')}}">Go to Dashboard</a>
-<a href="{{url_for('login')}}">Log in with this link.</a>
+<a href="{{url_for('login')}}">Login</a>
+<a href="{{url_for('logout')}}">Logout</a>
+
+
