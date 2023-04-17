@@ -1,5 +1,5 @@
 import os
-from forms import  EventForm
+from forms import  EventForm, AddAdminForm, DelAdminForm
 from flask import Flask, flash,render_template, url_for, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -20,6 +20,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 # Migrate(app,db)
 
+# Model for booking requests
 class BookingRequest(db.Model):
 
     __tablename__ = 'Requests'
@@ -45,6 +46,23 @@ class BookingRequest(db.Model):
     def __repr__(self):
         return f"Request by {self.name}"
         # add info about request
+
+# Model for Admin Management
+class AdminManagement(db.Model):
+    __tablename__ = 'Admins'
+    id = db.Column(db.Integer, primary_key = True)
+    name = db.Column(db.String(80), nullable=False)
+    email = db.Column(db.String(80), nullable=False)
+
+    def __init__(self, name, email):
+        self.name = name
+        self.email = email
+
+    def __repr__(self):
+        return f"Name:{self.name}  Email:{self.email}"
+
+
+
 
 @app.before_first_request
 def create_tables():
@@ -83,6 +101,51 @@ def requests_list():
     # display all requests
     requests = BookingRequest.query.all()
     return render_template('request_list.html', requests=requests)
+
+@app.route('/add_admin', methods=('GET', 'POST'))
+def add_admin():
+    form = AddAdminForm()
+    if form.validate_on_submit():
+        name = form.name.data
+        email = form.email.data
+    
+        admin_addn = AdminManagement(name=name, email=email)
+        db.session.add(admin_addn)
+        db.session.commit()
+
+        # flash message
+        flash("Admin added")
+        return redirect(url_for('add_admin'))
+
+    return render_template('add_admin.html', form=form)
+
+@app.route('/admin_list')
+def admin_list():
+    list = AdminManagement.query.all()
+    return render_template('admin_list.html', list=list)
+
+@app.route('/del_admin')
+def del_admin():
+    form = DelAdminForm()
+    if form.validate_on_submit():
+        email = form.email.data
+
+        admin = AdminManagement.query.filter(AdminManagement.email == email)
+
+        if admin:
+            db.session.delete(admin)
+            db.session.commit()
+
+            # flash appropriate message
+            flash('Admin deleted')
+            return redirect(url_for('del_admin'))
+
+        else:
+            flash('Admin not found')
+            return redirect(url_for('del_admin'))
+
+    return render_template('del_admin.html', form=form)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

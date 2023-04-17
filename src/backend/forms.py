@@ -16,3 +16,15 @@ class EventForm(FlaskForm):
     start_time = TimeField('Start Time', validators=[DataRequired()])
     end_time = TimeField('End Time', validators=[DataRequired()])
     submit = SubmitField('Submit')
+
+class AddAdminForm(FlaskForm):
+    name = StringField('Name:')
+    email = StringField('Email:', validators=[DataRequired(), Email()])
+    submit = SubmitField('Submit')
+
+class DelAdminForm(FlaskForm):
+    email = StringField('Email:', validators=[DataRequired(), Email()])
+    submit = SubmitField('Submit')
+
+
+    
