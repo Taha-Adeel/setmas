@@ -98,6 +98,7 @@ function AdminList() {
                   <thead>
                     <tr>
                       <th className="border-0"></th>
+                      <th className="border-0">Name</th>
                       <th className="border-0">Email ID</th>
                       <th className="border-0">Root Admin</th>
                     </tr>
@@ -106,16 +107,19 @@ function AdminList() {
                     <tr>
                       {/* make this a loop */}
                       <td>1</td>
+                      <td>super admin</td>
                       <td>setmas.admin@iith.ac.in</td>
                       <td>Yes</td>
                     </tr>
                     <tr>
                       <td>2</td>
+                      <td>jatin</td>
                       <td>cs20btech11021@iith.ac.in</td>
                       <td>No</td>
                     </tr>
                     <tr>
                       <td>3</td>
+                      <td>fic room booking</td>
                       <td>fic.roombooking@iith.ac.in</td>
                       <td>No</td>
                     </tr>

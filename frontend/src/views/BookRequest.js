@@ -1,6 +1,7 @@
 import React from "react";
+import serialize from "form-serialize";
 import NotificationAlert from "react-notification-alert";
-import { useState } from "react";
+import { useState, useRef } from "react";
 // react-bootstrap components
 
 import {
@@ -19,41 +20,62 @@ import {
 
 
 function Book() {
-  const [value, setvalue] = useState(),
-    onInput = ({target:{value}}) => setvalue(value),
-    onFormSubmit = (e) => {
-          e.preventDefault()
-          console.log(value)
-          setvalue()
-        }
-  var test = 1;
-  var val = 3;
-  const handleChange = (value) => {console.log(value);}
-  const [roomstate, setRoomState] = React.useState("Default Room");
-  const [csCheck, setCSCheck] = React.useState(false);
-  const [aiCheck, setAICheck] = React.useState(false);
-  const [twoHoursCheck, setTwoHoursCheck] = React.useState(false);
-  const [oneDayCheck, setOneDayCheck] = React.useState(false);
-  const notificationAlertRef = React.useRef(null);  
-  const notify = (e, place) => {
-    var type = "danger";
+  const formRef = useRef(null);
+  // const [value, setvalue] = useState(),
+  //   onInput = ({target:{value}}) => setvalue(value),
+  //   onFormSubmit = (e) => {
+  //         e.preventDefault()
+  //         const isAIChecked = data.get('AIMAIL') === 'on';
+  //         setFormData({ ...formdata, AIMAIL: isAIChecked });
+  //         console.log(value)
+  //         setvalue()
+  //       }
+  const isGood = false;
+  const [formdata, setFormData] = useState({});
+  
+  const notify = (e, place, typeofnotif) => {
+    //var type = "success";
+    var type = typeofnotif;
     var options = {};
     options = {
       place:place, 
       message: (
         <div>
           <div>
-            Hello and you are now welcome to <strong>SETMAS.</strong>
+            Your request has been submitted via <strong>SETMAS.</strong>
           </div>
         </div>
       ),
       type:type,
-      icon:"nc-icon nc-bell-55",
+      icon:"nc-icon nc-check-2",
       autoDismiss: 7,
       };
       notificationAlertRef.current.notificationAlert(options);
-      e.preventDefault();
+      //e.preventDefault();
     };
+
+  function handlesubmit(e, place, type) {
+    notify(e, place, type);
+    e.preventDefault();
+    const data = serialize(e.target, {hash: true});
+    const isAIChecked = data.AIMAIL === 'on';
+    console.log(isAIChecked.toString());
+    setFormData({ ...data, AIMAIL: isAIChecked.toString() });
+    console.log(formdata);
+    formRef.current.reset();
+    //console.log(data)
+  }
+
+  var test = 1;
+  var val = 3;
+  // const handleChange = (value) => {console.log(value);}
+  const [roomstate, setRoomState] = React.useState("Default Room");
+  const [csCheck, setCSCheck] = React.useState(false);
+  const [aiCheck, setAICheck] = React.useState(false);
+  const [twoHoursCheck, setTwoHoursCheck] = React.useState(false);
+  const [oneDayCheck, setOneDayCheck] = React.useState(false);
+  const notificationAlertRef = React.useRef(null);  
+
     var data = document.getElementById("testform");
     console.log(data);
   return (
@@ -69,7 +91,7 @@ function Book() {
                 <Card.Title as="h4">Book a Request</Card.Title>
               </Card.Header>
               <Card.Body>
-                <Form onSubmit={onFormSubmit}>
+                <Form ref = {formRef} onSubmit={(e) => handlesubmit(e, "tc", isGood ? "success" :"danger")}>
                   <Row>
                     <Col className="pr-2" md="4">
                       <Form.Group>
@@ -88,9 +110,7 @@ function Book() {
                       <Form.Group>
                         <label>Department</label>
                         <Form.Control
-                          onChange={onInput}
                           name = "dept"
-                          value={value}
                           placeholder="dept"
                           type="text"
                         ></Form.Control>
@@ -116,7 +136,7 @@ function Book() {
                       <Form.Group>
                         <label>Date Of Seminar(dd/mm/yyyy)</label>
                          <Form.Control
-                          name = "seminar date"
+                          name = "seminardate"
                           placeholder="dd/mm/yyyy"
                           type="date"
                         >
@@ -129,19 +149,19 @@ function Book() {
                       <Form.Group>
                         <label>Start Time</label>
                         <Form.Control
-                          name = "seminar date"
+                          name = "seminarstart"
                           placeholder="hh:mm"
                           type="time"
                         >
                         </Form.Control> 
-                        {/* <TimePicker start="10:00" end="21:00" step={30} /> */}
+                        {/* <TimePitescker start="10:00" end="21:00" step={30} /> */}
                       </Form.Group>
                     </Col>
                     <Col className="pr-1" md="5">
                       <Form.Group>
                         <label>End Time</label>
                         <Form.Control
-                          name = "seminar date"
+                          name = "seminarend"
                           placeholder="hh:mm"
                           type="time"
                         >
@@ -158,6 +178,7 @@ function Book() {
                         data-toggle="dropdown"
                         id="dropdown-67443507"
                         variant="default"
+                        name="room"
                         className="m-0"
                       >
                         
@@ -181,6 +202,7 @@ function Book() {
                           cols="80"
                           placeholder="Here can be your description"
                           rows="1"
+                          name="description"
                           as="textarea"
                         ></Form.Control>
                       </Form.Group>
@@ -204,12 +226,12 @@ function Book() {
                       <Form.Group>
                         <label>Seminar Mailing lists to Notify</label> <br />
                         <label>
-                          <input type="checkbox" id="cs" name="vehicle1" value={csCheck} onChange={(e) => { setCSCheck(e.target.checked) }} />
+                          <input type="checkbox" id="cs" name="CSMAIL" value={csCheck} defaultChecked={"false"} onChange={(e) => { setCSCheck(e.target.checked) }} />
                           CSE
                         </label>
                         <br />
                         <label>
-                          <input type="checkbox" id="ai" name="vehicle1" value={aiCheck} onChange={(e) => { setAICheck(e.target.checked) }} />
+                          <input type="checkbox" id="ai" name="AIMAIL" value={aiCheck} onChange={(e) => { setAICheck(e.target.checked) }} />
                           AI
                         </label>
                       </Form.Group>
@@ -220,12 +242,12 @@ function Book() {
                       <Form.Group>
                         <label>Times to set Reminder for</label> <br />
                         <label>
-                          <input type="checkbox" id="twohours" name="vehicle1" value={twoHoursCheck} onChange={(e) => { setTwoHoursCheck(e.target.checked) }} />
+                          <input type="checkbox" id="twohours" name="hours2" value={twoHoursCheck} onChange={(e) => { setTwoHoursCheck(e.target.checked) }} />
                           2 hours before the start time
                         </label>
                         <br />
                         <label>
-                          <input type="checkbox" id="oneday" name="vehicle1" value={oneDayCheck} onChange={(e) => { setOneDayCheck(e.target.checked) }} />
+                          <input type="checkbox" id="oneday" name="days1" value={oneDayCheck} onChange={(e) => { setOneDayCheck(e.target.checked) }} />
                           A day before the start time
                         </label>
                       </Form.Group>
