@@ -19,6 +19,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./assets/css/animate.min.css";
@@ -30,11 +31,16 @@ import AdminLayout from "layouts/Admin.js";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
+const clientId = '49524991744-m0uatjm8tp7b5n8u1ooavi0qfk4avdh9.apps.googleusercontent.com';
+
+
 root.render(
+  <GoogleOAuthProvider clientId='49524991744-m0uatjm8tp7b5n8u1ooavi0qfk4avdh9.apps.googleusercontent.com'>
   <BrowserRouter>
     <Switch>
       <Route path="/admin" render={(props) => <AdminLayout {...props} />} />
       <Redirect from="/" to="/admin/dashboard" />
     </Switch>
   </BrowserRouter>
+  </GoogleOAuthProvider>  
 );

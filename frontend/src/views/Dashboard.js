@@ -1,5 +1,6 @@
 import React from "react";
 import ChartistGraph from "react-chartist";
+import GoogleButton from "./GoogleButton";
 // react-bootstrap components
 import {
   Badge,
@@ -16,12 +17,15 @@ import {
   Tooltip,
 } from "react-bootstrap";
 
+
+
+
 function Dashboard() {
   return (
     <>
       <Container fluid>
         {/* <Row> */}
-          {/* <Col lg="3" sm="6">
+        {/* <Col lg="3" sm="6">
             <Card className="card-stats">
               <Card.Body>
                 <Row>
@@ -133,14 +137,14 @@ function Dashboard() {
             <p className="card-category">Here is a subtitle for this table</p>
           </Card.Header>
           <Card.Body>
-            <div>
+            {/* <div>
               <ul>
                 <li>1</li>
                 <li>2</li>
                 <li>3</li>
               </ul>
-            </div>
-
+            </div> */}
+            <GoogleButton />
           </Card.Body>
         </Card>
 
