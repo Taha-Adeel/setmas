@@ -12,10 +12,31 @@ import {
   Row,
   Col,
 } from "react-bootstrap";
+import { servicesVersion } from "typescript";
+import { useState, useRef } from "react";
 
-function AdminList() {
 
-  
+
+
+function AcceptRequests() {
+    const [tableData, setTableData] = useState([
+        { id: 1, name: 'John Doe', age: 30 },
+        { id: 2, name: 'Jane Doe', age: 25 },
+        { id: 3, name: 'Bob Smith', age: 40 },
+      ]);
+
+//     function generateTableEntry(request) {
+//     return (
+//       <tr>
+//         <td>{request.name}</td>
+//         <td>Dakota Rice</td>
+//         <td>$36,738</td>
+//         <td>Niger</td>
+//         <td>Oud-Turnhout</td>
+//       </tr>
+//     );
+//   }
+
   return (
     <>
       <Container fluid>
@@ -90,9 +111,9 @@ function AdminList() {
           <Col md="12">
             <Card className="card-plain table-plain-bg">
               <Card.Header>
-                <Card.Title as="h4">List of Admins</Card.Title>
+                <Card.Title as="h4">Your Requests</Card.Title>
                 <p className="card-category">
-                  These are the registered admins of this service. For any queries, please contact the admin.
+                  Here is a list of all the requests that are pending
                 </p>
               </Card.Header>
               <Card.Body className="table-full-width table-responsive px-0">
@@ -100,30 +121,37 @@ function AdminList() {
                   <thead>
                     <tr>
                       <th className="border-0"></th>
-                      <th className="border-0">Name</th>
-                      <th className="border-0">Email ID</th>
-                      <th className="border-0">Root Admin</th>
+                      <th className="border-0">Requester</th>
+                      <th className="border-0">Email</th>
+                      <th className="border-0">Title</th>
+                      <th className="border-0">Date</th>
+                      <th className="border-0">Start time</th>
+                      <th className="border-0">End time</th>
+                      <th className="border-0">Accept</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
                       {/* make this a loop */}
                       <td>1</td>
-                      <td>super admin</td>
-                      <td>setmas.admin@iith.ac.in</td>
-                      <td>Yes</td>
+                      <td>On Biomedical Sensing</td>
+                      <td>10-11-2022</td>
+                      <td>10-11-2023</td>
+                      <td>Pending</td>
                     </tr>
                     <tr>
                       <td>2</td>
-                      <td>jatin</td>
-                      <td>cs20btech11021@iith.ac.in</td>
-                      <td>No</td>
+                      <td>Advances in Auto Encoders</td>
+                      <td>11-12-2023</td>
+                      <td>11-12-2024</td>
+                      <td>Accepted</td>
                     </tr>
                     <tr>
                       <td>3</td>
-                      <td>fic room booking</td>
-                      <td>fic.roombooking@iith.ac.in</td>
-                      <td>No</td>
+                      <td>Creation of the modern computer keyboard</td>
+                      <td>22-10-2021</td>
+                      <td>22-10-2024</td>
+                      <td>Accepted</td>
                     </tr>
                   </tbody>
                 </Table>
@@ -136,4 +164,4 @@ function AdminList() {
   );
 }
 
-export default AdminList;
+export default AcceptRequests;

@@ -22,6 +22,8 @@ import Typography from "views/Typography.js";
 import Icons from "views/Icons.js";
 import Maps from "views/Maps.js";
 import Notifications from "views/Notifications.js";
+import ViewRequests from "views/ViewRequests.js";
+import AcceptRequests from "views/AcceptRequests.js";
 
 const dashboardRoutes = [
   {
@@ -29,14 +31,24 @@ const dashboardRoutes = [
     name: "Dashboard",
     icon: "nc-icon nc-chart-pie-35",
     component: Dashboard,
-    layout: "/admin"
+    layout: "/admin",
+    requiresAdmin: false
   },
   {
     path: "/book",
     name: "Book a Request",
     icon: "nc-icon nc-badge",
     component: Book,
-    layout: "/admin"
+    layout: "/admin",
+    requiresAdmin: false
+  },
+  {
+    path: "/viewrequests",
+    name: "View Requests",
+    icon: "nc-icon nc-email-85",
+    component: ViewRequests,
+    layout: "/admin",
+    requiresAdmin: false
   },
   {
     path: "/adminlist",
@@ -50,29 +62,42 @@ const dashboardRoutes = [
     name: "Typography",
     icon: "nc-icon nc-paper-2",
     component: Typography,
-    layout: "/admin"
+    layout: "/admin",
+    requiresAdmin: false
   },
   {
     path: "/icons",
     name: "Icons",
     icon: "nc-icon nc-atom",
     component: Icons,
-    layout: "/admin"
+    layout: "/admin",
+    requiresAdmin: false
   },
   {
     path: "/maps",
     name: "Maps",
     icon: "nc-icon nc-pin-3",
     component: Maps,
-    layout: "/admin"
+    layout: "/admin",
+    requiresAdmin: false
   },
   {
     path: "/notifications",
     name: "Notifications",
     icon: "nc-icon nc-bell-55",
     component: Notifications,
-    layout: "/admin"
+    layout: "/admin",
+    requiresAdmin: false
+  },
+  {
+    path: "/acceptrequests",
+    name: "Accept Requests",
+    icon: "nc-icon nc-tap-01",
+    component: AcceptRequests,
+    layout: "/admin",
+    requiresAdmin: true
   }
+  
 ];
 
 export default dashboardRoutes;

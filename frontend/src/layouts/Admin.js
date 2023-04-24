@@ -17,6 +17,7 @@
 */
 import React, { Component } from "react";
 import { useLocation, Route, Switch } from "react-router-dom";
+import { useState, useRef } from "react";
 
 import AdminNavbar from "components/Navbars/AdminNavbar";
 import Footer from "components/Footer/Footer";
@@ -25,7 +26,9 @@ import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
 
 import routes from "routes.js";
 
-import sidebarImage from "assets/img/sidebar-3.jpg";
+
+import sidebarImage from "assets/img/sidebar-4.jpg";
+import { get } from "jquery";
 
 function Admin() {
   const [image, setImage] = React.useState(sidebarImage);
@@ -34,9 +37,10 @@ function Admin() {
   const location = useLocation();
   // console.log(location);
   const mainPanel = React.useRef(null);
-  const getRoutes = (routes) => {
+  const getRoutes = (routes, userType) => {
     return routes.map((prop, key) => {
       if (prop.layout === "/admin") {
+        if(prop.requiresAdmin === false || (userType === "admin" || userType === "super")){
         return (
           <Route
             path={prop.layout + prop.path}
@@ -44,10 +48,11 @@ function Admin() {
             key={key}
           />
         );
-      } else {
-        return null;
+      } else{
+        return null; 
       }
-    });
+    }
+  });
   };
   React.useEffect(() => {
     document.documentElement.scrollTop = 0;
@@ -69,7 +74,7 @@ function Admin() {
         <div className="main-panel" ref={mainPanel}>
           <AdminNavbar />
           <div className="content">
-            <Switch>{getRoutes(routes)}</Switch>
+            <Switch>{getRoutes(routes, "user")}</Switch>
           </div>
           <Footer /> 
         </div>
