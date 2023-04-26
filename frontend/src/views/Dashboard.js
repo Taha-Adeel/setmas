@@ -247,22 +247,24 @@ function Dashboard() {
           </Col>
         </Row> */}
         {/*  ! WE TRY WRITING OUR OWN Card */}
-        <Card>
-          <Card.Header>
-            <Card.Title as="h4" /* mess with this*/>Simple Card</Card.Title>
-            <p className="card-category">Here is a subtitle for this table</p>
-          </Card.Header>
-          <Card.Body>
-            {/* <div>
-              <ul>
-                <li>1</li>
-                <li>2</li>
-                <li>3</li>
-              </ul>
-            </div> */}
-            <GoogleButton />
-          </Card.Body>
-        </Card>
+        {
+        // <Card>
+        //   <Card.Header>
+        //     <Card.Title as="h4" >Simple Card</Card.Title>
+        //     <p className="card-category">Here is a subtitle for this table</p>
+        //   </Card.Header>
+        //   <Card.Body>npm s
+        //     {/* <div>
+        //       <ul>
+        //         <li>1</li>
+        //         <li>2</li>
+        //         <li>3</li>
+        //       </ul>
+        //     </div> */}
+        //     <GoogleButton />
+        //   </Card.Body>
+        // </Card>
+        }
         <Card>
           <Card.Header>
             <Card.Title as="h4">Calendar</Card.Title>
