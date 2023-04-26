@@ -19,10 +19,38 @@ import React, { Component } from "react";
 import { useLocation, NavLink } from "react-router-dom";
 
 import { Nav } from "react-bootstrap";
-
+import { useContext } from "react";
+import { AuthContext } from '../../AuthContext.js';
 import logo from "assets/img/reactlogo.png";
 
 function Sidebar({ color, image, routes }) {
+
+  const { userType, setUserType, email, setEmail, name, setName, profileURL, setProfileURL } = useContext(AuthContext);
+  function checkAdmin(prop, usertype)
+  {
+    if(prop.requiresAdmin === true)
+    {
+      if(usertype === "admin" || usertype === "super")
+      {
+        return true;
+      }
+      else{
+        return false;
+      }
+    }
+    if(prop.requiresAdmin === false)
+    {
+      if(usertype === "notLoggedIn" && prop.requiresLogin === true)
+      {
+        return false;
+      }
+      else
+      {
+        return true;
+      }
+    }
+  }
+
   const location = useLocation();
   const activeRoute = (routeName) => {
     return location.pathname.indexOf(routeName) > -1 ? "active" : "";
@@ -46,33 +74,38 @@ function Sidebar({ color, image, routes }) {
             </div>
           </a>
           <a className="simple-text" href="https://www.iith.ac.in">
-            SETMAS IITH
+            SeTMaS
           </a>
         </div>
         <Nav>
           {routes.map((prop, key) => {
             if (!prop.redirect)
-              return (
-                <li
-                  className={
-                    prop.upgrade
-                      ? "active active-pro"
-                      : activeRoute(prop.layout + prop.path)
-                  }
-                  key={key}
-                >
-                  
-                  <NavLink
-                    to={prop.layout + prop.path}
-                    className="nav-link"
-                    activeClassName="active"
+              if (checkAdmin(prop, userType) === true)
+              {
+                return (
+                  <li
+                    className={
+                      prop.upgrade
+                        ? "active active-pro"
+                        : activeRoute(prop.layout + prop.path)
+                    }
+                    key={key}
                   >
-                    <i className={prop.icon} />
-                    <p>{prop.name}</p>
-                  </NavLink>
-                </li>
-              );
-            return null;
+                    
+                    <NavLink
+                      to={prop.layout + prop.path}
+                      className="nav-link"
+                      activeClassName="active"
+                    >
+                      <i className={prop.icon} />
+                      <p>{prop.name}</p>
+                    </NavLink>
+                  </li>
+                );
+              }
+              else{
+                return null;
+              }
           })}
         </Nav>
       </div>

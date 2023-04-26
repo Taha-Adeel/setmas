@@ -1,7 +1,5 @@
 import React from "react";
-import { createContext } from 'react';
-import { useContext } from 'react';
-import { AuthContext } from "../AuthContext.js";
+
 // react-bootstrap components
 import {
   Badge,
@@ -15,22 +13,29 @@ import {
   Col,
 } from "react-bootstrap";
 import { servicesVersion } from "typescript";
+import { useState, useRef } from "react";
 
 
 
 
-function ViewRequests() {
-    function generateTableEntry(request) {
-    return (
-      <tr>
-        <td>{request.name}</td>
-        <td>Dakota Rice</td>
-        <td>$36,738</td>
-        <td>Niger</td>
-        <td>Oud-Turnhout</td>
-      </tr>
-    );
-  }
+function ConfirmedRequests() {
+    const [tableData, setTableData] = useState([
+        { id: 1, name: 'John Doe', age: 30 },
+        { id: 2, name: 'Jane Doe', age: 25 },
+        { id: 3, name: 'Bob Smith', age: 40 },
+      ]);
+
+//     function generateTableEntry(request) {
+//     return (
+//       <tr>
+//         <td>{request.name}</td>
+//         <td>Dakota Rice</td>
+//         <td>$36,738</td>
+//         <td>Niger</td>
+//         <td>Oud-Turnhout</td>
+//       </tr>
+//     );
+//   }
 
   return (
     <>
@@ -108,7 +113,7 @@ function ViewRequests() {
               <Card.Header>
                 <Card.Title as="h4">Your Requests</Card.Title>
                 <p className="card-category">
-                  Here is a list of all the requests you have made
+                  Here is a list of all the requests that are pending
                 </p>
               </Card.Header>
               <Card.Body className="table-full-width table-responsive px-0">
@@ -116,10 +121,12 @@ function ViewRequests() {
                   <thead>
                     <tr>
                       <th className="border-0"></th>
+                      <th className="border-0">Requester</th>
+                      <th className="border-0">Email</th>
                       <th className="border-0">Title</th>
-                      <th className="border-0">Date placed</th>
                       <th className="border-0">Date</th>
-                      <th className="border-0">Status</th>
+                      <th className="border-0">Start time</th>
+                      <th className="border-0">End time</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -156,4 +163,4 @@ function ViewRequests() {
   );
 }
 
-export default ViewRequests;
+export default ConfirmedRequests;

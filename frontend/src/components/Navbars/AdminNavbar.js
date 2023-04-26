@@ -19,8 +19,39 @@ import React, { Component } from "react";
 import { useLocation } from "react-router-dom";
 import { Navbar, Container, Nav, Dropdown, Button } from "react-bootstrap";
 import GoogleButton from "../../views/GoogleButton";
+import { AuthContext } from "../../AuthContext.js";
+import { useContext } from 'react';
 
 import routes from "routes.js";
+
+// function onLogoutClick(e){
+//   const { userType, setUserType, email, name, profileURL } = useContext(AuthContext);
+//   setUserType("user");
+  
+// }
+// function authButton() {
+//   const { userType, setUserType, email, name, profileURL } = useContext(AuthContext);
+//   if(userType === "notLoggedIn")
+//   {
+//     return <GoogleButton />;
+//   }
+//   else{
+//     return (
+//       <div>
+//       <img src={profileURL} alt="PFP" />
+//       <Button onClick={(e) => {
+//         onLogoutClick(e); 
+//         window.location.reload();
+//         }
+//         }>
+//         Logout
+//       </Button>
+      
+//       </div>
+//     )
+//   }
+// }
+
 
 function Header() {
   const location = useLocation();
@@ -35,6 +66,40 @@ function Header() {
     };
     document.body.appendChild(node);
   };
+
+
+  // function onLogoutClick(){
+  //   const { userType, setUserType, email, name, profileURL } = useContext(AuthContext);
+  //   setUserType("user");
+  // }
+  function AuthButton() {
+    const { userType, setUserType, email, setEmail, name, setName, profileURL, setProfileURL } = useContext(AuthContext);
+
+    if(userType === "notLoggedIn")
+    {
+      return <GoogleButton />;
+    }
+    else{
+      console.log("profileURL: " + profileURL);
+      return (
+        <div>
+        <img style={{ width: 40, height: 40 }} src={profileURL} alt="PFP" />
+        <Button onClick={(e) => {
+          setUserType("notLoggedIn");
+          setEmail("");
+          setName("");
+          setProfileURL("");  
+          window.location.reload();
+          }
+          }>
+          Logout
+        </Button>
+        
+        </div>
+      )
+    }
+  }
+
 
   const getBrandText = () => {
     for (let i = 0; i < routes.length; i++) {
@@ -200,7 +265,7 @@ function Header() {
                 onClick={(e) => e.preventDefault()}
               >
                 {/* ! change this so that it reflects the logged in state of the user*/}  
-                <GoogleButton />
+                <AuthButton />
                 {/* <span className="no-icon">Log out</span> */}
               </Nav.Link>
             </Nav.Item>

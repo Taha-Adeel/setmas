@@ -2,6 +2,8 @@ import React from "react";
 import serialize from "form-serialize";
 import NotificationAlert from "react-notification-alert";
 import { useState, useRef } from "react";
+import { useContext } from "react";
+import { AuthContext } from '../AuthContext.js';
 // react-bootstrap components
 
 import {
@@ -19,7 +21,9 @@ import {
 
 
 
+
 function Book() {
+  
   const formRef = useRef(null);
   // const [value, setvalue] = useState(),
   //   onInput = ({target:{value}}) => setvalue(value),
@@ -42,7 +46,7 @@ function Book() {
       message: (
         <div>
           <div>
-            Your request has been submitted via <strong>SETMAS.</strong>
+            Your user type is {userType}. Your request has been submitted successfully.
           </div>
         </div>
       ),
@@ -57,7 +61,7 @@ function Book() {
   function handlesubmit(e, place, type) {
     notify(e, place, type);
     e.preventDefault();
-    const data = serialize(e.target, {hash: true});
+    const data = serialize(e.target, {hash: true, disabled: true});
     const isAIChecked = data.AIMAIL === 'on';
     console.log(isAIChecked.toString());
     setFormData({ ...data, AIMAIL: isAIChecked.toString() });
@@ -76,8 +80,10 @@ function Book() {
   const [oneDayCheck, setOneDayCheck] = React.useState(false);
   const notificationAlertRef = React.useRef(null);  
 
-    var data = document.getElementById("testform");
-    console.log(data);
+  var data = document.getElementById("testform");
+  console.log(data);
+  const { userType, setUserType, email, setEmail, name, setName, profileURL, setProfileURL } = useContext(AuthContext);
+  // console.log("name: " + name);
   return (
     <>
       <div>
@@ -88,7 +94,7 @@ function Book() {
           <Col md="8">
             <Card>
               <Card.Header>
-                <Card.Title as="h4">Book a Request</Card.Title>
+                <Card.Title as="h4">{userType === "admin"?"Book a Request for admins" : "Book a request"}</Card.Title>
               </Card.Header>
               <Card.Body>
                 <Form ref = {formRef} onSubmit={(e) => handlesubmit(e, "tc", isGood ? "success" :"danger")}>
@@ -98,8 +104,9 @@ function Book() {
                         <label>Requester Name</label>
                         {/* Get name from logged in user's info */}
                         <Form.Control
-                          placeholder="John Doe"
+                          placeholder="your name"
                           name = "name"
+                          defaultValue={name}
                           type="text"
                           disabled
                           readOnly
@@ -122,11 +129,11 @@ function Book() {
                           IITH Email Address
                         </label>
                         <Form.Control
-                          placeholder="johndoe@iith.ac.in"
+                          placeholder="your email"
+                          defaultValue={email}
                           name="email"
                           type="email"
                           disabled
-                          readOnly
                         ></Form.Control>
                       </Form.Group>
                     </Col>

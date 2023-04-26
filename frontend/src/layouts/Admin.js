@@ -18,6 +18,8 @@
 import React, { Component } from "react";
 import { useLocation, Route, Switch } from "react-router-dom";
 import { useState, useRef } from "react";
+import { useContext } from "react";
+import { AuthContext } from '../AuthContext.js';
 
 import AdminNavbar from "components/Navbars/AdminNavbar";
 import Footer from "components/Footer/Footer";
@@ -31,6 +33,7 @@ import sidebarImage from "assets/img/sidebar-4.jpg";
 import { get } from "jquery";
 
 function Admin() {
+  const {userType, setUserType, email, setEmail, name, setName, profileURL, setProfileURL } = useContext(AuthContext);
   const [image, setImage] = React.useState(sidebarImage);
   const [color, setColor] = React.useState("black");
   const [hasImage, setHasImage] = React.useState(true);
@@ -74,7 +77,7 @@ function Admin() {
         <div className="main-panel" ref={mainPanel}>
           <AdminNavbar />
           <div className="content">
-            <Switch>{getRoutes(routes, "user")}</Switch>
+            <Switch>{getRoutes(routes, userType)}</Switch>
           </div>
           <Footer /> 
         </div>

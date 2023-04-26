@@ -24,6 +24,7 @@ import Maps from "views/Maps.js";
 import Notifications from "views/Notifications.js";
 import ViewRequests from "views/ViewRequests.js";
 import AcceptRequests from "views/AcceptRequests.js";
+import ConfirmedRequests from "views/ConfirmedRequests.js";
 
 const dashboardRoutes = [
   {
@@ -32,7 +33,8 @@ const dashboardRoutes = [
     icon: "nc-icon nc-chart-pie-35",
     component: Dashboard,
     layout: "/admin",
-    requiresAdmin: false
+    requiresAdmin: false,
+    requiresLogin: false
   },
   {
     path: "/book",
@@ -40,7 +42,8 @@ const dashboardRoutes = [
     icon: "nc-icon nc-badge",
     component: Book,
     layout: "/admin",
-    requiresAdmin: false
+    requiresAdmin: false,
+    requiresLogin: true
   },
   {
     path: "/viewrequests",
@@ -48,14 +51,17 @@ const dashboardRoutes = [
     icon: "nc-icon nc-email-85",
     component: ViewRequests,
     layout: "/admin",
-    requiresAdmin: false
+    requiresAdmin: false,
+    requiresLogin: true
   },
   {
     path: "/adminlist",
     name: "Admin List",
     icon: "nc-icon nc-notes",
     component: AdminList,
-    layout: "/admin"
+    layout: "/admin",
+    requiresAdmin: false,
+    requiresLogin: true
   },
   {
     path: "/typography",
@@ -63,7 +69,8 @@ const dashboardRoutes = [
     icon: "nc-icon nc-paper-2",
     component: Typography,
     layout: "/admin",
-    requiresAdmin: false
+    requiresAdmin: false,
+    requiresLogin: true
   },
   {
     path: "/icons",
@@ -71,7 +78,8 @@ const dashboardRoutes = [
     icon: "nc-icon nc-atom",
     component: Icons,
     layout: "/admin",
-    requiresAdmin: false
+    requiresAdmin: false,
+    requiresLogin: true
   },
   {
     path: "/maps",
@@ -79,7 +87,8 @@ const dashboardRoutes = [
     icon: "nc-icon nc-pin-3",
     component: Maps,
     layout: "/admin",
-    requiresAdmin: false
+    requiresAdmin: false,
+    requiresLogin: true
   },
   {
     path: "/notifications",
@@ -87,7 +96,8 @@ const dashboardRoutes = [
     icon: "nc-icon nc-bell-55",
     component: Notifications,
     layout: "/admin",
-    requiresAdmin: false
+    requiresAdmin: false,
+    requiresLogin: true
   },
   {
     path: "/acceptrequests",
@@ -95,9 +105,18 @@ const dashboardRoutes = [
     icon: "nc-icon nc-tap-01",
     component: AcceptRequests,
     layout: "/admin",
-    requiresAdmin: true
+    requiresAdmin: true,
+    requiresLogin: true
+  },
+  {
+  path: "/confirmedrequests",
+  name: "Confirmed Requests",
+  icon: "nc-icon nc-check-2",
+  component: ConfirmedRequests,
+  layout: "/admin",
+  requiresAdmin: true,
+  requiresLogin: true
   }
-  
 ];
 
 export default dashboardRoutes;
