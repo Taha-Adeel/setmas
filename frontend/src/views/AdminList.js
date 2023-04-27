@@ -12,81 +12,103 @@ import {
   Row,
   Col,
 } from "react-bootstrap";
+import { useContext } from "react";
+import { AuthContext } from '../AuthContext.js';
 
 function AdminList() {
 
-  
+  const { userType, setUserType, email, setEmail, name, setName, profileURL, setProfileURL } = useContext(AuthContext);
+  function handleRemoval(admininfo) {
+    //here we will make a post request to the backend to remove the admin and reload the page 
+  }
+  function handleTransfer(admininfo){
+    //here we will make a post request to the backedn to transfer the super admin powers, what we will also have to do is 
+    
+
+    //from here, we set the current user to admin only, to prevent having multiple users that can perform admin actions
+    setUserType("admin");
+    //window.location.reload();
+  }
+
+  function getAdminEntry(admininfo, num) {
+
+    function yieldRemoveButton(){
+      if(userType === "super")
+      {
+        return (
+          <Button className= "btn-fill btn-danger" onClick={() => handleRemoval(admininfo)}>
+            Remove
+          </Button>
+        )
+      }
+      else{
+        return null;
+      }
+    }
+    function yieldTransferButton(){
+      if(userType === "super")
+      {
+        return (
+          <Button className= "btn-fill btn-info" onClick={() => handleTransfer(admininfo)}>
+            Transfer Root privileges
+          </Button>
+        )
+      }
+      else{
+        return null;
+      }
+    }
+    
+    return (
+      <tr>
+        <td>{num}</td>
+        <td>{admininfo.name}</td>
+        <td>{admininfo.email}</td>
+        <td>{admininfo.isRoot?"Yes":"No"}</td>
+        <td>
+          {yieldRemoveButton()}
+        </td>
+        <td>
+          {admininfo.isRoot?"":yieldTransferButton()}
+        </td>
+      </tr>
+    );
+  };
+
+  function createFormattedAdminList() {
+    //here we get the list of the admins as a json object of some kind 
+
+    const admins = [
+      {
+        name: "admin1",
+        email: "admin1@iith.ac.in",
+        isRoot: true
+      },
+      {
+        name: "admin2",
+        email: "admin2@iith.ac.in",
+        isRoot: false
+      },
+      {
+        name: "admin3",
+        email: "admin3@iith.ac.in",
+        isRoot: false
+      },
+      {
+        name: "admin4",
+        email: "admin4@gmail.com",
+        isRoot: false
+      }
+    ]
+    
+    return admins.map(getAdminEntry)
+   };
+
+  if(userType !== "notLoggedIn")
   return (
     <>
       <Container fluid>
         <Row>
-          {/* <Col md="12">
-            <Card className="strpied-tabled-with-hover">
-              <Card.Header>
-                <Card.Title as="h4">Striped Table with Hover</Card.Title>
-                <p className="card-category">
-                  Here is a subtitle for this table
-                </p>
-              </Card.Header>
-              <Card.Body className="table-full-width table-responsive px-0">
-                <Table className="table-hover table-striped">
-                  <thead>
-                    <tr>
-                      <th className="border-0">ID</th>
-                      <th className="border-0">Name</th>
-                      <th className="border-0">Salary</th>
-                      <th className="border-0">Country</th>
-                      <th className="border-0">City</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>1</td>
-                      <td>Dakota Rice</td>
-                      <td>$36,738</td>
-                      <td>Niger</td>
-                      <td>Oud-Turnhout</td>
-                    </tr>
-                    <tr>
-                      <td>2</td>
-                      <td>Minerva Hooper</td>
-                      <td>$23,789</td>
-                      <td>Curaçao</td>
-                      <td>Sinaai-Waas</td>
-                    </tr>
-                    <tr>
-                      <td>3</td>
-                      <td>Sage Rodriguez</td>
-                      <td>$56,142</td>
-                      <td>Netherlands</td>
-                      <td>Baileux</td>
-                    </tr>
-                    <tr>
-                      <td>4</td>
-                      <td>Philip Chaney</td>
-                      <td>$38,735</td>
-                      <td>Korea, South</td>
-                      <td>Overland Park</td>
-                    </tr>
-                    <tr>
-                      <td>5</td>
-                      <td>Doris Greene</td>
-                      <td>$63,542</td>
-                      <td>Malawi</td>
-                      <td>Feldkirchen in Kärnten</td>
-                    </tr>
-                    <tr>
-                      <td>6</td>
-                      <td>Mason Porter</td>
-                      <td>$78,615</td>
-                      <td>Chile</td>
-                      <td>Gloucester</td>
-                    </tr>
-                  </tbody>
-                </Table>
-              </Card.Body>
-            </Card>
-          </Col> */}
           <Col md="12">
             <Card className="card-plain table-plain-bg">
               <Card.Header>
@@ -103,11 +125,11 @@ function AdminList() {
                       <th className="border-0">Name</th>
                       <th className="border-0">Email ID</th>
                       <th className="border-0">Root Admin</th>
+                      <th className="border-0"></th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      {/* make this a loop */}
+                    {/* <tr>
                       <td>1</td>
                       <td>super admin</td>
                       <td>setmas.admin@iith.ac.in</td>
@@ -124,7 +146,8 @@ function AdminList() {
                       <td>fic room booking</td>
                       <td>fic.roombooking@iith.ac.in</td>
                       <td>No</td>
-                    </tr>
+                    </tr> */}
+                    {createFormattedAdminList()}
                   </tbody>
                 </Table>
               </Card.Body>

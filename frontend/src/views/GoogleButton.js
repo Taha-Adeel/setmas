@@ -18,7 +18,7 @@ function GoogleButton() {
     //here we make post req to determine if the person is an admin or not
     if(decoded.email === "cs20btech11021@iith.ac.in" && makeadmin === 1)
     {
-      setUserType("admin");
+      setUserType("super");
     }
     else{
       setUserType("user");
