@@ -35,8 +35,15 @@ export default class ConfirmRequestsClass extends Component {
       body: generateDialogBody(confirmedRequest),
       bsSize: 'large',
       actions: [
-        Dialog.CancelAction(),
-        Dialog.OKAction(() => { console.log('Cancel is clicked'); console.log(confirmedRequest); })
+        Dialog.Action(
+          'Abort and Close Dialog',
+          () => console.log("Abort button clicked"),
+        ),
+        Dialog.Action(
+          'Cancel Approved Request',
+          () => { console.log('Cancel is clicked'); console.log(confirmedRequest); },
+          'btn-danger'
+        )
       ]
     });
   }
