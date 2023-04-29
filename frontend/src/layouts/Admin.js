@@ -43,7 +43,29 @@ function Admin() {
   const getRoutes = (routes, userType) => {
     return routes.map((prop, key) => {
       if (prop.layout === "/admin") {
-        if(prop.requiresAdmin === false || (userType === "admin" || userType === "super")){
+        if(prop.requiresAdmin === false && prop.requiresLogin === false)
+          return (
+            <Route
+              path={prop.layout + prop.path}
+              render={(props) => <prop.component {...props} />}
+              key={key}
+            />
+          );
+        else if(prop.requiresAdmin === false) // But requires login
+        {
+          if(['admin', 'super', 'user'].includes(userType))
+            return (
+              <Route
+                path={prop.layout + prop.path}
+                render={(props) => <prop.component {...props} />}
+                key={key}
+              />
+            );
+          else return null;
+        }
+        // There is no page that requires login but not admin, so skipping that case
+        // case 4 requires admin
+        else if(userType === "admin" || userType === "super"){
         return (
           <Route
             path={prop.layout + prop.path}
@@ -51,7 +73,8 @@ function Admin() {
             key={key}
           />
         );
-      } else{
+        }
+        else{
         return null; 
       }
     }

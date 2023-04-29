@@ -37,9 +37,8 @@ function Book() {
   const isGood = false;
   const [formdata, setFormData] = useState({});
   
-  const notify = (e, place, typeofnotif) => {
+  const notify = (e, place) => {
     //var type = "success";
-    var type = typeofnotif;
     var options = {};
     options = {
       place:place, 
@@ -50,23 +49,77 @@ function Book() {
           </div>
         </div>
       ),
-      type:type,
+      type:'success',
       icon:"nc-icon nc-check-2",
       autoDismiss: 7,
       };
       notificationAlertRef.current.notificationAlert(options);
       //e.preventDefault();
     };
-
+  const errorNotify = (place, typeofnotif) => {
+    //var type = "success";
+    var type = typeofnotif;
+    var options = {};
+    options = {
+      place: place,
+      message: (
+        <div>
+          <div>
+            {"Form is not filled properly. Please check again. Ex: empty fields, or startime < endtime, etc."}
+          </div>
+        </div>
+      ),
+      type: type,
+      icon: "nc-icon nc-check-2",
+      autoDismiss: 7,
+    };
+    notificationAlertRef.current.notificationAlert(options);
+    //e.preventDefault();
+  };
+  function checkForSanity(data)
+  {
+    console.log("in check");
+    if(!("name" in data)) return false;
+    if(!("dept" in data)) return false;
+    if(!("email" in data)) return false;
+    if(!("description" in data)) return false;
+    if(!("title" in data)) return false;
+    if(!("seminardate" in data)) return false;
+    const currentDate =  new Date();
+    let enteredDate = new Date(data.seminardate);
+    if(enteredDate < currentDate)
+      return false;
+    if(!("seminarstart" in data)) return false;
+    if (!("seminarend" in data)) return false;
+    if(data.seminarstart >= data.seminarend) return false;
+    if(!("room" in data)) return false;
+    if(data.room === 'Default Room') return false;
+    return true;
+  }
   function handlesubmit(e, place, type) {
-    notify(e, place, type);
+        
     e.preventDefault();
-    const data = serialize(e.target, {hash: true, disabled: true});
-    const isAIChecked = data.AIMAIL === 'on';
-    console.log(isAIChecked.toString());
-    setFormData({ ...data, AIMAIL: isAIChecked.toString() });
-    console.log(formdata);
-    formRef.current.reset();
+    const data = serialize(e.target, { hash: true, disabled: true });
+    let appendedData = { ...data, room: roomstate };
+    
+    if(checkForSanity(appendedData))
+    {
+      notify(e, place);
+      console.log(appendedData);
+      formRef.current.reset();
+    }
+    else{
+      errorNotify(place, type);
+      console.log("Error, data not valid");
+    }
+      
+    
+  
+    // const isAIChecked = data.AIMAIL === 'on';
+    // console.log(isAIChecked.toString());
+    // setFormData({ ...data, AIMAIL: isAIChecked.toString() });
+    // console.log(formdata);
+    // formRef.current.reset();
     //console.log(data)
   }
 
@@ -212,7 +265,7 @@ function Book() {
                           cols="80"
                           placeholder="Here can be your description"
                           rows="1"
-                          name="description"
+                          name="title"
                           as="textarea"
                         ></Form.Control>
                       </Form.Group>
@@ -226,6 +279,7 @@ function Book() {
                           cols="80"
                           placeholder="Here can be your description"
                           rows="3"
+                          name ="description"
                           as="textarea"
                         ></Form.Control>
                       </Form.Group>
@@ -236,7 +290,7 @@ function Book() {
                       <Form.Group>
                         <label>Seminar Mailing lists to Notify</label> <br />
                         <label>
-                          <input type="checkbox" id="cs" name="CSMAIL" value={csCheck} defaultChecked={"false"} onChange={(e) => { setCSCheck(e.target.checked) }} />
+                          <input type="checkbox" id="cs" name="CSMAIL" value={csCheck}  onChange={(e) => { setCSCheck(e.target.checked) }} />
                           CSE
                         </label>
                         <br />
