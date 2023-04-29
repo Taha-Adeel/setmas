@@ -118,12 +118,12 @@ class AdminManagement(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(80), nullable=False)
-    rootAdmin_Status = db.Column(db.String(80), nullable=False)
+    rootAdminStatus = db.Column(db.String(80), nullable=False)
 
-    def __init__(self, name, email, rootAdmin_Status):
+    def __init__(self, name, email, rootAdminStatus):
         self.name = name
         self.email = email
-        self.rootAdmin_Status = rootAdmin_Status
+        self.rootAdminStatus = rootAdminStatus
 
     def __repr__(self):
         return f"Name:{self.name}  Email:{self.email}"
@@ -133,7 +133,7 @@ class AdminManagement(db.Model):
             'id': self.id,
             'name': self.name,
             'email': self.email,
-            'rootAdmin_Status': self.rootAdmin_Status
+            'rootAdminStatus': self.rootAdminStatus
         }
 
 
@@ -197,37 +197,69 @@ def view_admins_list():
     admins_dicts = [admin.to_dict() for admin in admins_list]
     return jsonify(admins_dicts)
 
-@app.route('/add_admin', methods=['POST'])
+@app.route('/add_admin', methods=['PUT'])
 def add_admin():
     data = request.get_json()
-    new_admin = AdminManagement(name=data['name'], email=data['email'], rootAdmin_Status='NO')
+    admin_count = AdminManagement.query.count()  # Get the number of admins currently in the database
+
+    if admin_count == 0:
+        new_admin = AdminManagement(name=data['name'], email=data['email'], rootAdminStatus='YES')
+    else:
+        new_admin = AdminManagement(name=data['name'], email=data['email'], rootAdminStatus='NO')
+    
+    
+
     db.session.add(new_admin)
     db.session.commit()
-    result = {'status': 'success'}
-    response = make_response(result, 200) # 200 is the status code
-    return response
+    success = {'status': 'success'}
+    failure = {'status': 'could not add admin'}
+    # response = make_response(success, 200) # 200 is the status code
+    if new_admin:
+        return make_response(success, 200)
+    return make_response(failure, 404)
 
 
-@app.route('/delete_admin', methods=['POST'])
+@app.route('/delete_admin', methods=['DELETE'])
 def delete_admin():
     data = request.get_json()
-    del_admin = AdminManagement.filter.query(AdminManagement.email == data['email']).first()
+    del_admin = AdminManagement.query.filter(AdminManagement.email == data['email']).first()
+    failure = {'status': 'Admin not found'}
+    if del_admin is None:
+        return make_response(failure, 404)
+    
     db.session.delete(del_admin)
     db.session.commit()
+    success = {'status': 'success'}
+    return make_response(success, 200)
+    
 
-@app.route('/make_rootAdmin', methods=['POST'])
-def make_rootAdmin():
+@app.route('/makeRootAdmin', methods=['PATCH'])
+def makeRootAdmin():
     data = request.get_json()
     # make current super admin to just admin
-    admin = AdminManagement.filter.query(AdminManagement.email == data['superEmail']).first()
+    admin = AdminManagement.query.filter(AdminManagement.email == data['superEmail']).first()
+    print('old admin')
+    print(admin)
     if admin:
-        admin.root_AdminStatus = 'NO'
+        admin.rootAdminStatus = 'NO'
+        db.session.commit()
+
     #transfer super admin powers
-    new_rootAdmin = AdminManagement.filter.query(AdminManagement.email == data['email'])
-    if new_rootAdmin:
-        new_rootAdmin.root_AdminStatus = 'YES'
+    newRootAdmin = AdminManagement.query.filter(AdminManagement.email == data['email']).first()
+    print('new admin')
+    print(newRootAdmin.rootAdminStatus)
+    if newRootAdmin:
+        newRootAdmin.rootAdminStatus = 'YES'
+        print(newRootAdmin.rootAdminStatus)
+
+        db.session.commit()
 
 
+    # committing the changes
+    # db.session.commit()
+
+    success = {'status': 'success'}
+    return make_response(success, 200)
         
 if __name__ == '__main__':
     app.run(debug=True)   
