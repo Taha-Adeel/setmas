@@ -1,5 +1,5 @@
-from flask import Flask, request, jsonify
-from flask_restful import Resource, Api, reqparse, abort, fields, marshal_with
+from flask import Flask, request, jsonify, make_response
+# from flask_restful import Resource, Api, reqparse, abort, fields, marshal_with
 from flask_sqlalchemy import SQLAlchemy
 # from wtforms import validators, Email, Time, BooleanField
 from datetime import datetime
@@ -98,6 +98,20 @@ class BookingRequestsModel(db.Model):
         return f"Request by {self.name}"
         # add info about request
 
+    def to_dict(self):
+        return {
+            'requestID': self.requestID,
+            'name': self.name,
+            'email': self.email,
+            'date': self.date,
+            'start_time': self.start_time,
+            'end_time': self.end_time,
+            'room': self.room,
+            'title': self.title,
+            'details': self.details,
+            'status': self.status
+        }
+
 # Model for Admin Management
 class AdminManagement(db.Model):
     __tablename__ = 'Admins'
@@ -113,6 +127,14 @@ class AdminManagement(db.Model):
 
     def __repr__(self):
         return f"Name:{self.name}  Email:{self.email}"
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'email': self.email,
+            'rootAdmin_Status': self.rootAdmin_Status
+        }
 
 
 
@@ -126,7 +148,7 @@ def create_tables():
 # @marshal_with(booking_request_resource_fields)
 @app.route('/create_request', methods=['POST'])
 def create_request():
-    data = request.json()
+    data = request.get_json()
     # id subject to modification
     booking_request = BookingRequestsModel(name=data['name'], email=data['email'], date=data['date'], start_time=data['start_time'], end_time=data['end_time'], room=data['room'], title=data['title'], details=data['details'])
 
@@ -135,7 +157,7 @@ def create_request():
 
     # add to database
     db.session.add(booking_request)
-    db.commit()
+    db.session.commit()
 
     # return booking_request
 
@@ -144,21 +166,22 @@ def create_request():
 @app.route('/request_list', methods=['GET'])
 def view_requests_list():
     requests_list = BookingRequestsModel.query.all()
-    return jsonify(requests_list)
+    requests_dict = [request.to_dict() for request in requests_list]
+    return jsonify(requests_dict)
 
 # @marshal_with(booking_request_resource_fields)
 @app.route('/reject_request', methods=['POST'])
 def reject_request():
-    data = request.json()
+    data = request.get_json()
     entry = BookingRequestsModel.query.filter(BookingRequestsModel.requestID == data['requestID']).first()
     db.session.delete(entry)
-    db.commit()
+    db.session.commit()
 
 #get requests by use[
 # @marshal_wi]h(booking_request_resource_fields)
 @app.route('/user_requests', methods=['GET'])
 def view_user_requests():
-    data = request.json()
+    data = request.get_json()
     user_requests = BookingRequestsModel.filter.query(BookingRequestsModel.name == data['name'])
     return jsonify(user_requests)
 
@@ -170,26 +193,31 @@ def view_user_requests():
 # @marshal_with(admin_list_resource_fields)
 @app.route('/admin_list', methods=['GET'])
 def view_admins_list():
-    admins_list = BookingRequestsModel.query.all()
-    return jsonify(admins_list)
+    admins_list = AdminManagement.query.all()
+    admins_dicts = [admin.to_dict() for admin in admins_list]
+    return jsonify(admins_dicts)
 
 @app.route('/add_admin', methods=['POST'])
 def add_admin():
-    data = request.json()
+    data = request.get_json()
     new_admin = AdminManagement(name=data['name'], email=data['email'], rootAdmin_Status='NO')
     db.session.add(new_admin)
-    db.commit()
+    db.session.commit()
+    result = {'status': 'success'}
+    response = make_response(result, 200) # 200 is the status code
+    return response
+
 
 @app.route('/delete_admin', methods=['POST'])
 def delete_admin():
-    data = request.json()
+    data = request.get_json()
     del_admin = AdminManagement.filter.query(AdminManagement.email == data['email']).first()
     db.session.delete(del_admin)
-    db.commit()
+    db.session.commit()
 
 @app.route('/make_rootAdmin', methods=['POST'])
 def make_rootAdmin():
-    data = request.json()
+    data = request.get_json()
     # make current super admin to just admin
     admin = AdminManagement.filter.query(AdminManagement.email == data['superEmail']).first()
     if admin:
