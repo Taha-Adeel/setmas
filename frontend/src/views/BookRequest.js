@@ -56,60 +56,102 @@ function Book() {
       notificationAlertRef.current.notificationAlert(options);
       //e.preventDefault();
     };
-  const errorNotify = (place, typeofnotif) => {
+  const errorNotify = (place, msg = "Form is not filled properly. Please check again. Ex: empty fields, or startime < endtime, etc.") => {
     //var type = "success";
-    var type = typeofnotif;
     var options = {};
     options = {
       place: place,
       message: (
         <div>
           <div>
-            {"Form is not filled properly. Please check again. Ex: empty fields, or startime < endtime, etc."}
+            {msg}
           </div>
         </div>
       ),
-      type: type,
-      icon: "nc-icon nc-check-2",
+      type: 'danger',
+      icon: "nc-icon nc-simple-remove",
       autoDismiss: 7,
     };
     notificationAlertRef.current.notificationAlert(options);
     //e.preventDefault();
   };
-  function checkForSanity(data)
+  function checkForSanity(data, place)
   {
+    let flag = true;
     console.log("in check");
-    if(!("name" in data)) return false;
-    if(!("dept" in data)) return false;
-    if(!("email" in data)) return false;
-    if(!("description" in data)) return false;
-    if(!("title" in data)) return false;
-    if(!("seminardate" in data)) return false;
+    if(!("name" in data)) {
+      errorNotify(place, "Name field is empty");
+      flag = false ;}
+    if(!("dept" in data)) {
+      errorNotify(place, "Dept field is empty");
+      flag = false ;}
+    if (!("email" in data)) {
+      errorNotify(place, "Email field is empty");
+      flag = false ;
+    }
+    if (!("description" in data)) {
+      errorNotify(place, "Details field is empty");
+      flag = false ;
+    }
+    if (!("title" in data)) {
+      errorNotify(place, "Title field is empty");
+      flag = false ;
+    }
+    if (!("seminardate" in data)) {
+      errorNotify(place, "Date field is empty");
+      flag = false ;
+    }
     const currentDate =  new Date();
     let enteredDate = new Date(data.seminardate);
     if(enteredDate < currentDate)
-      return false;
-    if(!("seminarstart" in data)) return false;
-    if (!("seminarend" in data)) return false;
-    if(data.seminarstart >= data.seminarend) return false;
-    if(!("room" in data)) return false;
-    if(data.room === 'Default Room') return false;
-    return true;
+      {
+        errorNotify(place, "Date cannot be earlier than today");
+        flag = false ;
+      }
+    if (!("seminarstart" in data)) {
+      errorNotify(place, "Start time field is empty");
+      flag = false ;
+    }
+    if (!("seminarend" in data)) {
+      errorNotify(place, "End time field is empty");
+      flag = false ;
+    }
+    if (data.seminarstart >= data.seminarend) {
+      errorNotify(place, "Start time cannot be earlier than end time");
+      flag = false ;
+    }
+    if (!("venue" in data)) {
+      errorNotify(place, "Room field is empty");
+      flag = false ;
+    }
+    if (data.venue === 'Default Room') {
+      errorNotify(place, "Room field is empty");
+      flag = false ;
+    }
+    return flag;
   }
   function handlesubmit(e, place, type) {
         
     e.preventDefault();
     const data = serialize(e.target, { hash: true, disabled: true });
-    let appendedData = { ...data, room: roomstate };
-    
-    if(checkForSanity(appendedData))
+    let appendedData = { ...data, venue: roomstate };
+    if(!('CSMAIL' in appendedData))
+      appendedData = {...appendedData, CSMAIL:false};
+    if (!('AIMAIL' in appendedData))
+      appendedData = { ...appendedData, AIMAIL: false };
+    if (!('hours2' in appendedData))
+      appendedData = { ...appendedData, hours2: false };
+    if (!('days1' in appendedData))
+      appendedData = { ...appendedData, days1: false };
+
+    if(checkForSanity(appendedData, place))
     {
       notify(e, place);
       console.log(appendedData);
-      formRef.current.reset();
+      // formRef.current.reset();
     }
     else{
-      errorNotify(place, type);
+      // errorNotify(place, type);
       console.log("Error, data not valid");
     }
       
@@ -171,7 +213,7 @@ function Book() {
                     </Col>
                     <Col className="px-2" md="2">
                       <Form.Group>
-                        <label>Department</label>
+                        <label>Department*</label>
                         <Form.Control
                           name = "dept"
                           placeholder="dept"
@@ -197,7 +239,7 @@ function Book() {
                   <Row>
                     <Col className="pr-1" md="7">
                       <Form.Group>
-                        <label>Date Of Seminar(dd/mm/yyyy)</label>
+                        <label>Date Of Seminar(dd/mm/yyyy)*</label>
                          <Form.Control
                           name = "seminardate"
                           placeholder="dd/mm/yyyy"
@@ -210,7 +252,7 @@ function Book() {
                   <Row>
                     <Col className="pr-1" md="5">
                       <Form.Group>
-                        <label>Start Time</label>
+                        <label>Start Time*</label>
                         <Form.Control
                           name = "seminarstart"
                           placeholder="hh:mm"
@@ -222,7 +264,7 @@ function Book() {
                     </Col>
                     <Col className="pr-1" md="5">
                       <Form.Group>
-                        <label>End Time</label>
+                        <label>End Time*</label>
                         <Form.Control
                           name = "seminarend"
                           placeholder="hh:mm"
@@ -260,7 +302,7 @@ function Book() {
                   <Row>
                     <Col md="12">
                       <Form.Group>
-                        <label>Title of the Seminar</label>
+                        <label>Title of the Seminar*</label>
                         <Form.Control
                           cols="80"
                           placeholder="Here can be your description"
@@ -274,7 +316,7 @@ function Book() {
                   <Row className="pb-2">
                     <Col md="12">
                       <Form.Group>
-                        <label>Details of the Seminar (Speaker Bio, Topic, Relevant Information etc.)</label>
+                        <label>Details of the Seminar (Speaker Bio, Topic, Relevant Information etc.)*</label>
                         <Form.Control
                           cols="80"
                           placeholder="Here can be your description"

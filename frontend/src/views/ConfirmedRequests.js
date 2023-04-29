@@ -68,7 +68,7 @@ export default class ConfirmRequestsClass extends Component {
         "CSMAIL": "false",
         "AIMAIL": "false",
         "hours2": "true",
-        "day1": "false"
+        "days1": "false"
       },
       {
         "name": "John Doe",
@@ -83,7 +83,7 @@ export default class ConfirmRequestsClass extends Component {
         "CSMAIL": "false",
         "AIMAIL": "false",
         "hours2": "true",
-        "day1": "true"
+        "days1": "true"
       },
       {
         "name": "PRASHANTH SRIRAM S",
@@ -98,7 +98,7 @@ export default class ConfirmRequestsClass extends Component {
         "CSMAIL": "false",
         "AIMAIL": "false",
         "hours2": "false",
-        "day1": "false"
+        "days1": "false"
       }
     ];
     return confirmedRequests.map((confirmedRequest, index) => {
