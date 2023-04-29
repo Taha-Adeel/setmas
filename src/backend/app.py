@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_restful import Resource, Api, reqparse, abort, fields, marshal_with
 from flask_sqlalchemy import SQLAlchemy
-from wtforms import validators, Email, Time, BooleanField
+# from wtforms import validators, Email, Time, BooleanField
 from datetime import datetime
 import os
 from flask_cors import CORS
@@ -124,7 +124,7 @@ def create_tables():
 
 # Creating a request
 # @marshal_with(booking_request_resource_fields)
-@app.route('/create_request', methods=['POST'])
+@app.route('/create_request', methods=('POST'))
 def create_request():
     data = request.json()
     # id subject to modification
@@ -137,15 +137,17 @@ def create_request():
     db.session.add(booking_request)
     db.commit()
 
+    # return booking_request
+
 #show all  requests
 # @marshal_with(booking_request_resource_fields)
-@app.route('/request_list', methods=['GET'])
+@app.route('/request_list', methods=('GET'))
 def view_requests_list():
     requests_list = BookingRequestsModel.query.all()
     return jsonify(requests_list)
 
 # @marshal_with(booking_request_resource_fields)
-@app.route('/reject_request', methods=['POST'])
+@app.route('/reject_request', methods=('POST'))
 def reject_request():
     data = request.json()
     entry = BookingRequestsModel.query.filter(BookingRequestsModel.requestID == data['requestID']).first()
@@ -154,7 +156,7 @@ def reject_request():
 
 #get requests by user
 # @marshal_with(booking_request_resource_fields)
-@app.route('/user_requests', methods=['GET'])
+@app.route('/user_requests', methods=('GET'))
 def view_user_requests():
     data = request.json()
     user_requests = BookingRequestsModel.filter.query(BookingRequestsModel.name == data['name'])
@@ -166,26 +168,26 @@ def view_user_requests():
 
 # viewing admin list
 # @marshal_with(admin_list_resource_fields)
-@app.route('/admin_list', methods=['GET'])
+@app.route('/admin_list', methods=('GET'))
 def view_admins_list():
     admins_list = BookingRequestsModel.query.all()
     return jsonify(admins_list)
 
-@app.route('add_admin', methods=['POST'])
+@app.route('add_admin', methods=('POST'))
 def add_admin():
     data = request.json()
     new_admin = AdminManagement(name=data['name'], email=data['email'], rootAdmin_Status='NO')
     db.session.add(new_admin)
     db.commit()
 
-@app.route('delete_admin', methods=['POST'])
+@app.route('delete_admin', methods=('POST'))
 def delete_admin():
     data = request.json()
     del_admin = AdminManagement.filter.query(AdminManagement.email == data['email']).first()
     db.session.delete(del_admin)
     db.commit()
 
-@app.route('/make_rootAdmin', method=['POST'])
+@app.route('/make_rootAdmin', method=('POST'))
 def make_rootAdmin():
     data = request.json()
     # make current super admin to just admin
