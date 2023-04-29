@@ -21,7 +21,6 @@ import { useLocation, NavLink } from "react-router-dom";
 import { Nav } from "react-bootstrap";
 import { useContext } from "react";
 import { AuthContext } from '../../AuthContext.js';
-import logo from "assets/img/reactlogo.png";
 
 function Sidebar({ color, image, routes }) {
 
