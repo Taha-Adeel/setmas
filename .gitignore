@@ -131,3 +131,6 @@ dmypy.json
 
 # Latex 
 *.tex
+
+# Node modules
+frontend/node_modules/
