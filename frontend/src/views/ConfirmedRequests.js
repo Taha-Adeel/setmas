@@ -1,4 +1,4 @@
-import React, { Component }, { Component } from "react";
+import React, { Component } from "react";
 
 // react-bootstrap components
 import {
@@ -16,6 +16,10 @@ import Dialog from 'react-bootstrap-dialog';
 import { servicesVersion } from "typescript";
 import { useState, useRef } from "react";
 
+// function handleAccept(num) {
+//   // Ideally send the id (in the db that was sent by the backend when queried) to the backend 
+//   console.log("Request " + num + " was accepted");
+// }
 
 function generateDialogBody(confirmedRequest) {
   let str = 'Are you sure you want to cancel this request?\n';

@@ -15,7 +15,7 @@ import {
   Col,
 } from "react-bootstrap";
 import { servicesVersion } from "typescript";
-import { request } from "gaxios";
+
 
 
 
@@ -68,7 +68,7 @@ function ViewRequests() {
         status: "Rejected"
       },
       {
-        title: "Where are we in thsi universer",
+        title: "Where are any of us in thsi universer",
         date: "2022-12-31",
         starttime: "00:10",
         endtime: "23:30",
@@ -165,14 +165,15 @@ function ViewRequests() {
                     <tr>
                       <th className="border-0"></th>
                       <th className="border-0">Title</th>
-                      <th className="border-0">Date placed</th>
                       <th className="border-0">Date</th>
+                      <th className="border-0">Start time</th>
+                      <th className="border-0">End time</th>
+                      <th className="border-0">Venue</th>
                       <th className="border-0">Status</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      {/* make this a loop */}
+                    {/* <tr>
                       <td>1</td>
                       <td>On Biomedical Sensing</td>
                       <td>10-11-2022</td>
@@ -192,7 +193,10 @@ function ViewRequests() {
                       <td>22-10-2021</td>
                       <td>22-10-2024</td>
                       <td>Accepted</td>
-                    </tr>
+                    </tr> */}
+                    {
+                      getMyRequests()
+                    }
                   </tbody>
                 </Table>
               </Card.Body>
