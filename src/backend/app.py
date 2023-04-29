@@ -145,15 +145,13 @@ def create_tables():
 ############## Booking Request Functions ##############
 
 # Creating a request
-# @marshal_with(booking_request_resource_fields)
-@app.route('/create_request', methods=['POST'])
+@app.route('/create_request', methods=['PUT'])
 def create_request():
     data = request.get_json()
     # id subject to modification
-    booking_request = BookingRequestsModel(name=data['name'], email=data['email'], date=data['date'], start_time=data['start_time'], end_time=data['end_time'], room=data['room'], title=data['title'], details=data['details'])
+    booking_request = BookingRequestsModel(name=data['name'], email=data['email'], date=data['date'], start_time=data['start_time'], end_time=data['end_time'], room=data['room'], title=data['title'], details=data['details'], status='Pending')
 
     #checks and modifications
-    booking_request.status = 'Pending'
 
     # add to database
     db.session.add(booking_request)
@@ -162,28 +160,41 @@ def create_request():
     # return booking_request
 
 #show all  requests
-# @marshal_with(booking_request_resource_fields)
 @app.route('/request_list', methods=['GET'])
 def view_requests_list():
     requests_list = BookingRequestsModel.query.all()
     requests_dict = [request.to_dict() for request in requests_list]
     return jsonify(requests_dict)
 
-# @marshal_with(booking_request_resource_fields)
-@app.route('/reject_request', methods=['POST'])
-def reject_request():
+# accept a request
+@app.route('/accept_request', methods=['PATCH'])
+def accept_request():
     data = request.get_json()
-    entry = BookingRequestsModel.query.filter(BookingRequestsModel.requestID == data['requestID']).first()
-    db.session.delete(entry)
+    accept = BookingRequestsModel.query.filter(BookingRequestsModel.requestID == data['requestID']).first()
+    accept.status = 'Accepted'
     db.session.commit()
 
-#get requests by use[
-# @marshal_wi]h(booking_request_resource_fields)
+    success = {'status': 'success'}
+    return make_response(success, 200)
+
+# reject a request
+@app.route('/reject_request', methods=['PATCH'])
+def reject_request():
+    data = request.get_json()
+    reject = BookingRequestsModel.query.filter(BookingRequestsModel.requestID == data['requestID']).first()
+    reject.status = 'Rejected'
+    db.session.commit()
+
+    success = {'status': 'success'}
+    return make_response(success, 200)
+
+#get requests by user
 @app.route('/user_requests', methods=['GET'])
 def view_user_requests():
     data = request.get_json()
-    user_requests = BookingRequestsModel.filter.query(BookingRequestsModel.name == data['name'])
-    return jsonify(user_requests)
+    user_requests_list = BookingRequestsModel.query.filter(BookingRequestsModel.name == data['name'])
+    user_requests_dict = [user_request.to_dict() for user_request in user_requests_list]
+    return jsonify(user_requests_dict)
 
     
 ############## Admin Management Functions ##############
@@ -238,25 +249,18 @@ def makeRootAdmin():
     data = request.get_json()
     # make current super admin to just admin
     admin = AdminManagement.query.filter(AdminManagement.email == data['superEmail']).first()
-    print('old admin')
-    print(admin)
+    # print('old admin')
+    # print(admin)
     if admin:
         admin.rootAdminStatus = 'NO'
         db.session.commit()
 
     #transfer super admin powers
     newRootAdmin = AdminManagement.query.filter(AdminManagement.email == data['email']).first()
-    print('new admin')
     print(newRootAdmin.rootAdminStatus)
     if newRootAdmin:
         newRootAdmin.rootAdminStatus = 'YES'
-        print(newRootAdmin.rootAdminStatus)
-
         db.session.commit()
-
-
-    # committing the changes
-    # db.session.commit()
 
     success = {'status': 'success'}
     return make_response(success, 200)
