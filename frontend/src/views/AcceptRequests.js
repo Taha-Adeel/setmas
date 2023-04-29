@@ -261,7 +261,7 @@ export default class AcceptRequestsClass extends Component {
             <Col md="12">
               <Card className="card-plain table-plain-bg">
                 <Card.Header>
-                  <Card.Title as="h4">Your Requests</Card.Title>
+                  <Card.Title as="h4">Pending Requests</Card.Title>
                   <p className="card-category">
                     Here is a list of all the requests that are pending. Click accept on a request to view more details and then confirm the popup dialog
                   </p>

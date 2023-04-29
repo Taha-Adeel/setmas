@@ -15,21 +15,69 @@ import {
   Col,
 } from "react-bootstrap";
 import { servicesVersion } from "typescript";
+import { request } from "gaxios";
 
 
 
 
 function ViewRequests() {
-    function generateTableEntry(request) {
+
+
+    function generateRequestEntry(request, num) {
     return (
+      <>
       <tr>
-        <td>{request.name}</td>
-        <td>Dakota Rice</td>
-        <td>$36,738</td>
-        <td>Niger</td>
-        <td>Oud-Turnhout</td>
+        <td>{num+1}</td>
+        <td>{request.title}</td>
+        <td>{request.date} </td>
+        <td>{request.starttime}</td>
+        <td>{request.endtime}</td>
+        <td>{request.venue}</td>
+        <td>{request.status}</td>
       </tr>
+      </>
     );
+  }
+
+  function getMyRequests() {
+    // ! here we run the get all request to the backend database of requests, queried on the users email
+    
+    const requests = [
+      {
+        title: "aksdfa",
+        date: "2020-06-07",
+        starttime: "10:10",
+        endtime: "10:30",
+        venue: "ALH1",
+        status: "Pending"
+      },
+      {
+        title: "my brain",
+        date: "2020-10-10",
+        starttime: "22:10",
+        endtime: "23:30",
+        venue: "ALH2",
+        status: "Accepted"
+      },
+      {
+        title: "LMAO",
+        date: "2023-06-07",
+        starttime: "10:20",
+        endtime: "10:59",
+        venue: "Auditorium",
+        status: "Rejected"
+      },
+      {
+        title: "Where are we in thsi universer",
+        date: "2022-12-31",
+        starttime: "00:10",
+        endtime: "23:30",
+        venue: "B114",
+        status: "Accepted"
+      }
+    ];
+
+    return requests.map(generateRequestEntry)
   }
 
   return (

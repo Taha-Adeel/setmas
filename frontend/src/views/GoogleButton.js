@@ -10,6 +10,7 @@ function GoogleButton() {
   const {userType, setUserType, email, setEmail, name, setName, profileURL, setProfileURL } = useContext(AuthContext);
   async function onSuccess(response) {
     var makeadmin = 1;
+    console.log(response);
     var decoded = jwt_decode(response.credential);
     console.log(decoded);
     setEmail(decoded.email);

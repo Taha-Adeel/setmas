@@ -1,21 +1,29 @@
 import React from "react";
 
+
+import { useState, useRef } from "react";
 // react-bootstrap components
 import {
   Badge,
   Button,
   Card,
+  Form,
   Navbar,
   Nav,
-  Table,
   Container,
   Row,
   Col,
+  Dropdown,
+  Table
 } from "react-bootstrap";
+import serialize from "form-serialize";
 import { useContext } from "react";
 import { AuthContext } from '../AuthContext.js';
 
+
 function AdminList() {
+
+  const formRef = useRef(null);
 
   const { userType, setUserType, email, setEmail, name, setName, profileURL, setProfileURL } = useContext(AuthContext);
   function handleRemoval(admininfo) {
@@ -30,6 +38,19 @@ function AdminList() {
     //window.location.reload();
   }
 
+
+
+  function addAdmin (e) {
+
+    // ! here we will make an api call to google people in order to get the name 
+    const newadmindata = serialize(e.target, {hash: true, disabled: true});
+    console.log(newadmindata);
+    console.log("lol"); 
+
+    formRef.current.reset();
+    e.preventDefault();
+
+  }
   function getAdminEntry(admininfo, num) {
 
     function yieldRemoveButton(){
@@ -61,8 +82,7 @@ function AdminList() {
     
     return (
       <tr>
-        <td>{num}</td>
-        <td>{admininfo.name}</td>
+        <td>{num+1}</td>
         <td>{admininfo.email}</td>
         <td>{admininfo.isRoot?"Yes":"No"}</td>
         <td>
@@ -80,23 +100,23 @@ function AdminList() {
 
     const admins = [
       {
-        name: "admin1",
+
         email: "admin1@iith.ac.in",
         isRoot: true
       },
       {
-        name: "admin2",
+
         email: "admin2@iith.ac.in",
         isRoot: false
       },
       {
-        name: "admin3",
+
         email: "admin3@iith.ac.in",
         isRoot: false
       },
       {
-        name: "admin4",
-        email: "admin4@gmail.com",
+
+        email: "admin4@iith.ac.in",
         isRoot: false
       }
     ]
@@ -122,7 +142,6 @@ function AdminList() {
                   <thead>
                     <tr>
                       <th className="border-0"></th>
-                      <th className="border-0">Name</th>
                       <th className="border-0">Email ID</th>
                       <th className="border-0">Root Admin</th>
                       <th className="border-0"></th>
@@ -154,6 +173,51 @@ function AdminList() {
             </Card>
           </Col>
         </Row>
+        {
+          userType === "super"?
+          <Row>
+            <Col md="12">
+              <Card>
+                <Card.Header>
+                  <Card.Title as="h4">Add Admin</Card.Title>
+                  <p className="card-category">
+                    Add a new admin to the service.
+                  </p>
+                </Card.Header>
+                <Card.Body>
+                  <Form ref = {formRef} onSubmit={(e) => {addAdmin(e)}}>
+                    <Row>
+                      <Col md="5">
+                        <Form.Group>
+                          <label>Email</label>
+                          <Form.Control
+                            defaultValue=""
+                            placeholder="Email"
+                            name="email"
+                            type="text"
+                          ></Form.Control>
+                        </Form.Group>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col md="5">
+                        <Button
+                        className="btn-fill btn-info pull-right"
+                        type="submit"
+                        variant="default"
+                        >
+                        Submit
+                        </Button>
+                      </Col>
+                    </Row>
+                  </Form>
+                </Card.Body>
+              </Card>
+            </Col>
+          </Row>
+          :
+          null
+        }
       </Container>
     </>
   );

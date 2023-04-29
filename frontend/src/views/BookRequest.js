@@ -95,6 +95,9 @@ function Book() {
             <Card>
               <Card.Header>
                 <Card.Title as="h4">{userType === "admin"?"Book a Request for admins" : "Book a request"}</Card.Title>
+                <p className="card-category">
+                    This form is for submitting a request for a seminar. It will be reviewed by the admins of the service and accepted if the criteria are satisfied. 
+                </p>
               </Card.Header>
               <Card.Body>
                 <Form ref = {formRef} onSubmit={(e) => handlesubmit(e, "tc", isGood ? "success" :"danger")}>
