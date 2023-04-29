@@ -22,50 +22,50 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-db.create_all()
+# db.create_all()
 ##end
 
 # args for booking-requests
-request_args = reqparse.RequestParser()
-request_args.add_argument('name', type=str, required=True)
-request_args.add_argument('department', type=str, required=True)
-request_args.add_argument('email', type=Email(), required=True)
-request_args.add_argument('date', type=lambda x: datetime.strptime(x, '%Y-%m-%d'), required=True)
-request_args.add_argument('start_time', type=Time(format='%H:%M'), required=True)
-request_args.add_argument('end_time', type=Time(format='%H:%M'), required=True)
-request_args.add_argument('room', type=str, required=True)
-request_args.add_argument('title', type=str, required=True)
-request_args.add_argument('details', type=str, required=True)
-# request_args.add_argument('Seminar-List', type=str, required=True)
-request_args.add_argument('requestID', type=int)    #null, needs to be assigned
-request_args.add_argument('status', type=validators.OneOf(['Pending', 'Accepted', 'Rejected'])) #null, assign it to pending
+# request_args = reqparse.RequestParser()
+# request_args.add_argument('name', type=str, required=True)
+# request_args.add_argument('department', type=str, required=True)
+# request_args.add_argument('email', type=Email(), required=True)
+# request_args.add_argument('date', type=lambda x: datetime.strptime(x, '%Y-%m-%d'), required=True)
+# request_args.add_argument('start_time', type=Time(format='%H:%M'), required=True)
+# request_args.add_argument('end_time', type=Time(format='%H:%M'), required=True)
+# request_args.add_argument('room', type=str, required=True)
+# request_args.add_argument('title', type=str, required=True)
+# request_args.add_argument('details', type=str, required=True)
+# # request_args.add_argument('Seminar-List', type=str, required=True)
+# request_args.add_argument('requestID', type=int)    #null, needs to be assigned
+# request_args.add_argument('status', type=validators.OneOf(['Pending', 'Accepted', 'Rejected'])) #null, assign it to pending
 
-# response marshaller for booking requests
-booking_request_resource_fields = {
-    'name': fields.String,
-    'email': fields.String,
-    'date': fields.String,
-    'start_time': fields.String,
-    'end_time': fields.String,
-    'room': fields.String,
-    'title': fields.String,
-    'details': fields.String,
-    # 'RequestID': fields.Integer,
-    'status': fields.String
-}
+# # response marshaller for booking requests
+# booking_request_resource_fields = {
+#     'name': fields.String,
+#     'email': fields.String,
+#     'date': fields.String,
+#     'start_time': fields.String,
+#     'end_time': fields.String,
+#     'room': fields.String,
+#     'title': fields.String,
+#     'details': fields.String,
+#     # 'RequestID': fields.Integer,
+#     'status': fields.String
+# }
 
-# args for admin-list
-admin_args = reqparse.RequestParser()
-admin_args.add_argument('name', type=str, required=True)
-admin_args.add_argument('email', type=Email(), required=True)
-admin_args.add_argument('rootAdmin_Status', type=bool)
+# # args for admin-list
+# admin_args = reqparse.RequestParser()
+# admin_args.add_argument('name', type=str, required=True)
+# admin_args.add_argument('email', type=Email(), required=True)
+# admin_args.add_argument('rootAdmin_Status', type=bool)
 
-# response marshaller for admin list
-admin_list_resource_fields = {
-    'name': fields.String,
-    'email': fields.String,
-    'rootAdmin_Status': fields.Boolean
-}
+# # response marshaller for admin list
+# admin_list_resource_fields = {
+#     'name': fields.String,
+#     'email': fields.String,
+#     'rootAdmin_Status': fields.Boolean
+# }
 
 class BookingRequestsModel(db.Model):
     __tablename__ = 'Booking_Requests'
@@ -104,6 +104,7 @@ class AdminManagement(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(80), nullable=False)
+    rootAdmin_Status = db.Column(db.String(80), nullable=False)
 
     def __init__(self, name, email, rootAdmin_Status):
         self.name = name
@@ -115,51 +116,91 @@ class AdminManagement(db.Model):
 
 
 
+@app.before_first_request
+def create_tables():
+    db.create_all()
 
+############## Booking Request Functions ##############
 
 # Creating a request
-@marshal_with(booking_request_resource_fields)
+# @marshal_with(booking_request_resource_fields)
 @app.route('/create_request', methods=['POST'])
 def create_request():
-    args = request_args.parse_args()
+    data = request.json()
     # id subject to modification
-    booking_request = BookingRequestsModel(name=args['name'], email=args['email'], date=args['date'], start_time=args['start_time'], end_time=args['end_time'], room=args['room'], title=args['title'], details=args['details'], status=args['status'])
+    booking_request = BookingRequestsModel(name=data['name'], email=data['email'], date=data['date'], start_time=data['start_time'], end_time=data['end_time'], room=data['room'], title=data['title'], details=data['details'])
 
     #checks and modifications
-    if booking_request.status is None:
-        booking_request.status = 'Pending'
+    booking_request.status = 'Pending'
 
     # add to database
     db.session.add(booking_request)
     db.commit()
 
 #show all  requests
-@marshal_with(booking_request_resource_fields)
+# @marshal_with(booking_request_resource_fields)
 @app.route('/request_list', methods=['GET'])
-def requests_list():
-    requests = BookingRequestsModel.query.all()
-    return jsonify(requests)
+def view_requests_list():
+    requests_list = BookingRequestsModel.query.all()
+    return jsonify(requests_list)
 
-@marshal_with(booking_request_resource_fields)
+# @marshal_with(booking_request_resource_fields)
 @app.route('/reject_request', methods=['POST'])
 def reject_request():
-    args = request_args.parse_args()
-    request = BookingRequestsModel.query.filter(BookingRequestsModel.requestID == args['requestID']).first()
-    db.session.delete(request)
+    data = request.json()
+    entry = BookingRequestsModel.query.filter(BookingRequestsModel.requestID == data['requestID']).first()
+    db.session.delete(entry)
     db.commit()
 
 #get requests by user
-@marshal_with(booking_request_resource_fields)
+# @marshal_with(booking_request_resource_fields)
 @app.route('/user_requests', methods=['GET'])
-def user_requests():
+def view_user_requests():
     data = request.json()
-    requests = BookingRequestsModel.filter.query(BookingRequestsModel.name == data['name'])
+    user_requests = BookingRequestsModel.filter.query(BookingRequestsModel.name == data['name'])
+    return jsonify(user_requests)
+
     
+############## Admin Management Functions ##############
+
+
 # viewing admin list
-@marshal_with(admin_list_resource_fields)
+# @marshal_with(admin_list_resource_fields)
 @app.route('/admin_list', methods=['GET'])
 def view_admins_list():
-    
+    admins_list = BookingRequestsModel.query.all()
+    return jsonify(admins_list)
+
+@app.route('add_admin', methods=['POST'])
+def add_admin():
+    data = request.json()
+    new_admin = AdminManagement(name=data['name'], email=data['email'], rootAdmin_Status='NO')
+    db.session.add(new_admin)
+    db.commit()
+
+@app.route('delete_admin', methods=['POST'])
+def delete_admin():
+    data = request.json()
+    del_admin = AdminManagement.filter.query(AdminManagement.email == data['email']).first()
+    db.session.delete(del_admin)
+    db.commit()
+
+@app.route('/make_rootAdmin', method=['POST'])
+def make_rootAdmin():
+    data = request.json()
+    # make current super admin to just admin
+    admin = AdminManagement.filter.query(AdminManagement.email == data['superEmail']).first()
+    if admin:
+        admin.root_AdminStatus = 'NO'
+    #transfer super admin powers
+    new_rootAdmin = AdminManagement.filter.query(AdminManagement.email == data['email'])
+    if new_rootAdmin:
+        new_rootAdmin.root_AdminStatus = 'YES'
+
+
+        
+if __name__ == '__main__':
+    app.run(debug=True)   
 
 
 
