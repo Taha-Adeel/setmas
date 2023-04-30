@@ -10,7 +10,7 @@ class AdminList:
     
     
     def add_admin(admin):
-        new_admin = AdminModel(name=admin['name'], email=admin['email'], isSuperAdmin='NO')
+        new_admin = AdminModel(email=admin['email'], isSuperAdmin='NO')
 
         is_present = AdminModel.query.filter(AdminModel.email == new_admin.email).first()
 

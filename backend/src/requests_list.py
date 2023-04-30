@@ -24,13 +24,17 @@ class RequestsList:
         return jsonify(rejected_requests_dicts)
         
     def get_user_requests(user):
-        user_requests_list = BookingRequestModel.query.filter(BookingRequestModel.name == user['name'])
+        user_requests_list = BookingRequestModel.query.filter(BookingRequestModel.email == user['email'])
         user_requests_dicts = [user_request.to_dict() for user_request in user_requests_list]
         return jsonify(user_requests_dicts)
     
+
+
     def add_new_request(request):
          # id subject to modification
-        booking_request = BookingRequestModel(name=request['name'], email=request['email'], date=request['date'], start_time=request['start_time'], end_time=request['end_time'], room=request['room'], title=request['title'], details=request['details'], status='Pending')
+        booking_request = BookingRequestModel(name=request['name'], email=request['email'], date=request['date'], 
+                                                start_time=request['start_time'], end_time=request['end_time'], room=request['room'], 
+                                                    title=request['title'], details=request['details'], status='Pending')
 
         #checks and modifications
 
