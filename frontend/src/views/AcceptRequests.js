@@ -33,7 +33,7 @@ export default class AcceptRequestsClass extends Component {
   }
   componentDidMount() {
     console.log("Mounting");
-    fetch('http://127.0.0.1:5000/request_list', {
+    fetch('http://127.0.0.1:5000/pending_requests', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'

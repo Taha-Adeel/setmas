@@ -38,6 +38,8 @@ def create_request():
     db.session.commit()
 
     # return booking_request
+    success = {'status': 'success'}
+    return make_response(success, 200)
 
 #show all  requests
 @app.route('/request_list', methods=['GET'])
@@ -45,6 +47,13 @@ def view_requests_list():
     requests_list = BookingRequestsModel.query.all()
     requests_dict = [request.to_dict() for request in requests_list]
     return jsonify(requests_dict)
+
+#show Pending Requests
+@app.route("/pending_requests", methods=['GET'])
+def view_pending_requests():
+    pending_requests = BookingRequestsModel.query.filter(BookingRequestsModel.status == 'Pending')
+    request_dict = [request.to_dict() for request in pending_requests]
+    return jsonify(request_dict)
 
 # accept a request
 @app.route('/accept_request', methods=['PATCH'])
