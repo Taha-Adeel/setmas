@@ -38,7 +38,7 @@ export default class ConfirmRequestsClass extends Component {
   componentDidMount() {
     //here we get the list of the confirmed requests as a json object of some kind 
     
-      fetch("http://127.0.0.1:5000/get_accepted_requests", {
+      fetch("http://127.0.0.1:5000/accepted_requests", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -46,7 +46,7 @@ export default class ConfirmRequestsClass extends Component {
       })
         .then((response) => response.json())
         .then((data) => {
-          this.setData({ data });
+          this.setState({ data });
         })
         .catch((error) => {
           console.error(error);
@@ -139,6 +139,7 @@ export default class ConfirmRequestsClass extends Component {
     //   }
     // ];
   createFormattedRequestsList() {
+    console.log("data is : " + this.state.data);
     return this.state.data.map((confirmedRequest, index) => {
       return (<tr key={index}>{this.getRequestEntry(confirmedRequest, index + 1)}</tr>);
     });
