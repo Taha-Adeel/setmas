@@ -45,13 +45,13 @@ function Book() {
       message: (
         <div>
           <div>
-            Your user type is {userType}. Your request has been submitted successfully.
+             Your request has been submitted successfully.
           </div>
         </div>
       ),
       type:'success',
       icon:"nc-icon nc-check-2",
-      autoDismiss: 7,
+      autoDismiss: 3.5,
       };
       notificationAlertRef.current.notificationAlert(options);
       //e.preventDefault();
@@ -130,13 +130,13 @@ function Book() {
     }
     return flag;
   }
-  function handlesubmit(e, place, type) {
+  async function handlesubmit(e, place, type) {
         
     e.preventDefault();
     const data = serialize(e.target, { hash: true, disabled: true });
     let appendedData = { ...data, venue: roomstate };
     if(!('CSMAIL' in appendedData))
-      appendedData = {...appendedData, CSMAIL:false};
+      appendedData = {...appendedData, CSMAIL: false};
     if (!('AIMAIL' in appendedData))
       appendedData = { ...appendedData, AIMAIL: false };
     if (!('hours2' in appendedData))
@@ -146,15 +146,41 @@ function Book() {
 
     if(checkForSanity(appendedData, place))
     {
-      notify(e, place);
+      
       console.log(appendedData);
-      // formRef.current.reset();
+      console.log("Form will be submitted with the above data");
+      formRef.current.reset();
+
+      //API CALL FOR ADDING BOOKING REQ HERE
+      const response = await fetch('http://localhost:5000/create_request', {
+        method: 'POST',
+        headers: {
+          'Content-Type' : 'application/json'
+        },
+        body: JSON.stringify(appendedData)
+        }
+      );
+      const responsedata = await response.json(); 
+      if(!response.ok)
+      {
+        const message = "an error occurred: ${response.status} ${response.statusText}";
+        throw new Error(message);
+      }
+      console.log("Request went through ");
+      console.log(responsedata);
+
+
+      notify(e, place); //change this to be on success of API call
     }
     else{
       // errorNotify(place, type);
       console.log("Error, data not valid");
     }
-      
+    
+    handlesubmit().catch(error =>{
+      error.message;
+    })
+    
     
   
     // const isAIChecked = data.AIMAIL === 'on';
@@ -189,7 +215,7 @@ function Book() {
           <Col md="8">
             <Card>
               <Card.Header>
-                <Card.Title as="h4">{userType === "admin"?"Book a Request for admins" : "Book a request"}</Card.Title>
+                <Card.Title as="h4">Book a request</Card.Title>
                 <p className="card-category">
                     This form is for submitting a request for a seminar. It will be reviewed by the admins of the service and accepted if the criteria are satisfied. 
                 </p>
@@ -302,7 +328,7 @@ function Book() {
                   <Row>
                     <Col md="12">
                       <Form.Group>
-                        <label>Title of the Seminar*</label>
+                        <label>Title of the Seminar* (in brief)</label>
                         <Form.Control
                           cols="80"
                           placeholder="Here can be your description"
