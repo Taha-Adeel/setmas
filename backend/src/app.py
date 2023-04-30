@@ -32,7 +32,7 @@ def create_request():
     data = request.get_json()
     print(request.get_json())
     # id subject to modification
-    booking_request = BookingRequestsModel(name=data['name'], email=data['email'], date=data['seminardate'], start_time=data['seminarstart'], end_time=data['seminarend'], room=data['venue'], title=data['venue'], details=data['description'], status='Pending')
+    booking_request = BookingRequestsModel(name=data['name'], email=data['email'], date=data['date'], start_time=data['start_time'], end_time=data['end_time'], room=data['room'], title=data['title'], details=data['details'], status='Pending')
 
     #checks and modifications
 
