@@ -1,11 +1,9 @@
 import os
-from flask import Flask, request, jsonify, make_response
+from flask import Flask, request, make_response
 from flask_cors import CORS
-from util.database.admin_list_model import AdminModel
-from util.database.request_list_model import BookingRequestModel
 from util.database import db, create_db_tables
-from admin.admin_list import AdminList
-from requests.requests_list import RequestsList
+from admin_list import AdminList
+from requests_list import RequestsList
 
 app = Flask(__name__)
 cors = CORS(app)

@@ -8,6 +8,7 @@ class AdminList:
         admins_dicts = [admin.to_dict() for admin in admins_list]
         return jsonify(admins_dicts)
     
+    
     def add_admin(admin):
         new_admin = AdminModel(name=admin['name'], email=admin['email'], isSuperAdmin='NO')
 
@@ -21,6 +22,7 @@ class AdminList:
 
         # TODO: add function to send admin additon mail
         return True, 'Admin Successfully Added'
+
 
     def delete_admin(admin):
         del_admin = AdminModel.query.filter(AdminModel.email == admin['email']).first()
@@ -36,6 +38,7 @@ class AdminList:
 
         # TODO: add function to send admin deletion mail
         return True
+
 
     def make_super_admin(admin_data):
         cur_super = AdminModel.query.filter(AdminModel.email == admin_data['super']).first()
@@ -60,8 +63,6 @@ class AdminList:
 
         # TODO: add function to send mail to new super and old super
         return True, 'Super Admin changed'
-
-
 
 
     def check_user_state(admin):
