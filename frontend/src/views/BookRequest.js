@@ -91,7 +91,7 @@ function Book() {
       errorNotify(place, "Email field is empty");
       flag = false ;
     }
-    if (!("description" in data)) {
+    if (!("details" in data)) {
       errorNotify(place, "Details field is empty");
       flag = false ;
     }
@@ -99,7 +99,7 @@ function Book() {
       errorNotify(place, "Title field is empty");
       flag = false ;
     }
-    if (!("seminardate" in data)) {
+    if (!("date" in data)) {
       errorNotify(place, "Date field is empty");
       flag = false ;
     }
@@ -110,11 +110,11 @@ function Book() {
         errorNotify(place, "Date cannot be earlier than today");
         flag = false ;
       }
-    if (!("seminarstart" in data)) {
+    if (!("start_date" in data)) {
       errorNotify(place, "Start time field is empty");
       flag = false ;
     }
-    if (!("seminarend" in data)) {
+    if (!("end_date" in data)) {
       errorNotify(place, "End time field is empty");
       flag = false ;
     }
@@ -122,7 +122,7 @@ function Book() {
       errorNotify(place, "Start time cannot be earlier than end time");
       flag = false ;
     }
-    if (!("venue" in data)) {
+    if (!("room" in data)) {
       errorNotify(place, "Room field is empty");
       flag = false ;
     }
@@ -271,7 +271,7 @@ function Book() {
                       <Form.Group>
                         <label>Date Of Seminar(dd/mm/yyyy)*</label>
                          <Form.Control
-                          name = "seminardate"
+                          name = "date"
                           placeholder="dd/mm/yyyy"
                           type="date"
                         >
@@ -284,7 +284,7 @@ function Book() {
                       <Form.Group>
                         <label>Start Time*</label>
                         <Form.Control
-                          name = "seminarstart"
+                          name = "start_time"
                           placeholder="hh:mm"
                           type="time"
                         >
@@ -296,7 +296,7 @@ function Book() {
                       <Form.Group>
                         <label>End Time*</label>
                         <Form.Control
-                          name = "seminarend"
+                          name = "end_time"
                           placeholder="hh:mm"
                           type="time"
                         >
@@ -351,7 +351,7 @@ function Book() {
                           cols="80"
                           placeholder="Here can be your description"
                           rows="3"
-                          name ="description"
+                          name ="details"
                           as="textarea"
                         ></Form.Control>
                       </Form.Group>
