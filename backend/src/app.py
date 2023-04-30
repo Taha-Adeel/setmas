@@ -146,7 +146,7 @@ def makeRootAdmin():
     success = {'status': 'success'}
     return make_response(success, 200)
 
-@app.route('checkUserLevel', methods=['GET', 'POST'])
+@app.route('/checkUserLevel', methods=['GET', 'POST'])
 def checkUserLevel():
     data = request.get_json()
 
@@ -159,7 +159,7 @@ def checkUserLevel():
         else:
             reply = {'level': 'admin'}
     
-    return make_response(reply, 200)
+    return reply.jsonify()
 
     
         

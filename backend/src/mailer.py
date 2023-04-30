@@ -12,13 +12,48 @@ app.config['MAIL_PASSWORD'] = 'nkryqhcbrabdgwkn'
 
 mail = Mail(app)
 
-@app.route('/')
-def send_mail():
-    msg = Message(subject='Testing Mail Service', sender='setmasiith@gmail.com', recipients=['cs20btech11045@iith.ac.in', 'cs20btech11052@iith.ac.in', 'cs20btech11039@iith.ac.in', 'cs20btech11021@iith.ac.in'])
-    msg.body = 'Have a nice day :)'
-
+def request_submission_notif(email):
+    msg = Message(subject='Booking Request Status', sender='setmasiith@gmail.com', recipients=[email])
+    msg.body = 'Dear User,\nYour booking request has been submitted.'
     mail.send(msg)
-    return "Email sent"
+    return 'Email sent'
+
+def request_accepted_notif(email):
+    msg = Message(subject='Booking Request Status', sender='setmasiith@gmail.com', recipients=[email])
+    msg.body = 'Dear User,\nYour booking request has been accepted.'
+    mail.send(msg)
+    return 'Email sent'
+
+def request_rejected_notif(email):
+    msg = Message(subject='Booking Request Status', sender='setmasiith@gmail.com', recipients=[email])
+    msg.body = 'Dear User,\nYour booking request has been rejected.'
+    mail.send(msg)
+    return 'Email sent'
+
+def new_admin_status(email):
+    msg = Message(subject='Change in Status', sender='setmasiith@gmail.com', recipients=[email])
+    msg.body = 'Dear User,\nYou are now an admin.'
+    mail.send(msg)
+    return 'Email sent'
+
+def delete_admin_status(email):
+    msg = Message(subject='Change in Status', sender='setmasiith@gmail.com', recipients=[email])
+    msg.body = "Dear User,\nYou've been removed as an admin."
+    mail.send(msg)
+    return 'Email sent'
+
+def super_admin_status(new_superAdmin_email, old_superAdmin_email):
+    msg = Message(subject='Change in Status', sender='setmasiith@gmail.com', recipients=[new_superAdmin_email])
+    msg.body = "Dear User,\nYou've been promoted to Super Admin."
+    mail.send(msg)
+
+    msg = Message(subject='Change in Status', sender='setmasiith@gmail.com', recipients=[old_superAdmin_email])
+    msg.body = "Dear User,\nYou've been demoted to Admin."
+    mail.send(msg)
+
+
+    return 'Email sent'
+
 
 if __name__ == '__main__':
    app.run(debug = True)
