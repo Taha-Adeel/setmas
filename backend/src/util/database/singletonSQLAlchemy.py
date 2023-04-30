@@ -8,7 +8,7 @@ class SingletonSQLAlchemy(SQLAlchemy):
 	def __new__(cls, *args, **kwargs):
 		if cls._instance is None:
 			basedir = os.path.abspath(os.path.dirname(__file__))
-			data_folder = os.path.join(basedir, '../data')
+			data_folder = os.path.join(basedir, '../../../data')
 			if not os.path.exists(data_folder):
 				os.makedirs(data_folder)
 

@@ -2,4 +2,5 @@ Flask
 Flask-Cors
 Flask-Dance
 Flask-SQLAlchemy
+flask_mail
 requests

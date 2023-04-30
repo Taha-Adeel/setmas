@@ -1,10 +1,9 @@
-# app.py
+import os
 from flask import Flask, request, jsonify, make_response
 from flask_cors import CORS
-import os
 from util.database.admin_list_model import AdminManagement
 from util.database.request_list_model import BookingRequestsModel
-from util.database import db, create_tables
+from util.database import db, create_db_tables
 
 app = Flask(__name__, template_folder='../templates')
 cors = CORS(app)
@@ -21,7 +20,7 @@ db.init_app(app)
 # Create tables
 @app.before_first_request
 def create_tables():
-    create_tables(app)
+    create_db_tables(app)
 
 ############## Booking Request Functions ##############
 
