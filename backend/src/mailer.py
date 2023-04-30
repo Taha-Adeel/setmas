@@ -14,8 +14,9 @@ mail = Mail(app)
 
 @app.route('/')
 def send_mail():
-    msg = Message(subject='Your Mom', sender='setmasiith@gmail.com', recipients=['shambuk157@gmail.com'])
-    msg.body = 'Your mom is GAyyyy'
+    msg = Message(subject='Testing Mail Service', sender='setmasiith@gmail.com', recipients=['cs20btech11045@iith.ac.in', 'cs20btech11052@iith.ac.in', 'cs20btech11039@iith.ac.in', 'cs20btech11021@iith.ac.in'])
+    msg.body = 'Have a nice day :)'
+
     mail.send(msg)
     return "Email sent"
 

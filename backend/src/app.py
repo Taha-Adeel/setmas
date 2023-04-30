@@ -145,6 +145,23 @@ def makeRootAdmin():
 
     success = {'status': 'success'}
     return make_response(success, 200)
+
+@app.route('checkUserLevel', methods=['GET', 'POST'])
+def checkUserLevel():
+    data = request.get_json()
+
+    find = AdminManagement.query.filter(AdminManagement.email == data['email']).first()
+    if find is None:
+        reply = {'level': 'user'}
+    else:
+        if find.rootAdminStatus == 'YES':
+            reply = {'level': 'superadmin'}
+        else:
+            reply = {'level': 'admin'}
+    
+    return make_response(reply, 200)
+
+    
         
 if __name__ == '__main__':
     app.run(debug=True)   
