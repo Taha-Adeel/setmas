@@ -14,7 +14,7 @@ import {
 } from "react-bootstrap";
 import Dialog from 'react-bootstrap-dialog';
 import { servicesVersion } from "typescript";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 // function handleAccept(num) {
 //   // Ideally send the id (in the db that was sent by the backend when queried) to the backend 
@@ -33,6 +33,24 @@ export default class ConfirmRequestsClass extends Component {
     this.CancelDialog = this.CancelDialog.bind(this);
     this.createFormattedRequestsList = this.createFormattedRequestsList.bind(this);
     this.getRequestEntry = this.getRequestEntry.bind(this);
+    this.state = {data: []};
+  }
+  componentDidMount() {
+    //here we get the list of the confirmed requests as a json object of some kind 
+    
+      fetch("http://127.0.0.1:5000/get_accepted_requests", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          this.setData({ data });
+        })
+        .catch((error) => {
+          console.error(error);
+        });
   }
   CancelDialog(confirmedRequest) {
     this.dialog.show({
@@ -51,57 +69,57 @@ export default class ConfirmRequestsClass extends Component {
       ]
     });
   }
-  createFormattedRequestsList() {
-    //here we get the list of the confirmed requests as a json object of some kind 
+  
 
-    const confirmedRequests = [
-      {
-        "name": "PRASHANTH SRIRAM S",
-        "dept": "CSE",
-        "email": "cs20btech11039@iith.ac.in",
-        "seminardate": "2023-04-20",
-        "seminarstart": "19:39",
-        "seminarend": "20:41",
-        "title": "On How to book seminars",
-        "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        "venue": "B115",
-        "CSMAIL": "false",
-        "AIMAIL": "false",
-        "hours2": "true",
-        "days1": "false"
-      },
-      {
-        "name": "John Doe",
-        "dept": "MECH",
-        "email": "me20btech11039@iith.ac.in",
-        "seminardate": "2023-04-2",
-        "seminarstart": "07:39",
-        "seminarend": "20:41",
-        "title": "Nenjam sonnathe",
-        "desc": 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-        "venue": "ALH1",
-        "CSMAIL": "false",
-        "AIMAIL": "false",
-        "hours2": "true",
-        "days1": "true"
-      },
-      {
-        "name": "PRASHANTH SRIRAM S",
-        "dept": "adsdf",
-        "email": "cs20btech11039@iith.ac.in",
-        "seminardate": "2023-04-20",
-        "seminarstart": "19:39",
-        "seminarend": "20:41",
-        "title": "Yet another title",
-        "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        "venue": "CH2",
-        "CSMAIL": "false",
-        "AIMAIL": "false",
-        "hours2": "false",
-        "days1": "false"
-      }
-    ];
-    return confirmedRequests.map((confirmedRequest, index) => {
+    // const confirmedRequests = [
+    //   {
+    //     "name": "PRASHANTH SRIRAM S",
+    //     "dept": "CSE",
+    //     "email": "cs20btech11039@iith.ac.in",
+    //     "seminardate": "2023-04-20",
+    //     "seminarstart": "19:39",
+    //     "seminarend": "20:41",
+    //     "title": "On How to book seminars",
+    //     "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    //     "venue": "B115",
+    //     "CSMAIL": "false",
+    //     "AIMAIL": "false",
+    //     "hours2": "true",
+    //     "days1": "false"
+    //   },
+    //   {
+    //     "name": "John Doe",
+    //     "dept": "MECH",
+    //     "email": "me20btech11039@iith.ac.in",
+    //     "seminardate": "2023-04-2",
+    //     "seminarstart": "07:39",
+    //     "seminarend": "20:41",
+    //     "title": "Nenjam sonnathe",
+    //     "desc": 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+    //     "venue": "ALH1",
+    //     "CSMAIL": "false",
+    //     "AIMAIL": "false",
+    //     "hours2": "true",
+    //     "days1": "true"
+    //   },
+    //   {
+    //     "name": "PRASHANTH SRIRAM S",
+    //     "dept": "adsdf",
+    //     "email": "cs20btech11039@iith.ac.in",
+    //     "seminardate": "2023-04-20",
+    //     "seminarstart": "19:39",
+    //     "seminarend": "20:41",
+    //     "title": "Yet another title",
+    //     "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    //     "venue": "CH2",
+    //     "CSMAIL": "false",
+    //     "AIMAIL": "false",
+    //     "hours2": "false",
+    //     "days1": "false"
+    //   }
+    // ];
+  createFormattedRequestsList() {
+    return this.state.data.map((confirmedRequest, index) => {
       return (<tr key={index}>{this.getRequestEntry(confirmedRequest, index + 1)}</tr>);
     });
   }

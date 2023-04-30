@@ -151,10 +151,9 @@ function Book() {
       
       console.log(appendedData);
       console.log("Form will be submitted with the above data");
-      //formRef.current.reset();
-      console.log("yes");
+      formRef.current.reset();
       console.log(`${backendServerLocation}`);
-      //API CALL FOR ADDING BOOKING REQ HERE
+      
       const response = await fetch(`${backendServerLocation}/create_request`, {
         method: 'PUT',
         headers: {

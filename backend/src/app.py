@@ -91,7 +91,11 @@ def view_user_requests():
     user_requests_dict = [user_request.to_dict() for user_request in user_requests_list]
     return jsonify(user_requests_dict)
 
-    
+@app.route('/get_accepted_requests', methods=['GET'])    
+def view_accepted_requests():
+    accepted_requests = BookingRequestsModel.query.filter(BookingRequestsModel.status == 'Accepted')
+    request_dict = [request.to_dict() for request in accepted_requests]
+    return jsonify(request_dict)
 ############## Admin Management Functions ##############
 
 
