@@ -22,12 +22,7 @@ class RequestsList:
         rejected_requests_list = BookingRequestModel.query.filter(BookingRequestModel.status == 'Rejected')
         rejected_requests_dicts = [rejected_request.to_dict() for rejected_request in rejected_requests_list]
         return jsonify(rejected_requests_dicts)
-    
-    def get_cancelled_requests():
-        cancelled_requests_list = BookingRequestModel.query.filter(BookingRequestModel.status == 'Cancelled')
-        cancelled_requests_dicts = [cancelled_request.to_dict() for cancelled_request in cancelled_requests_list]
-        return jsonify(cancelled_requests_dicts)
-    
+        
     def get_user_requests(user):
         user_requests_list = BookingRequestModel.query.filter(BookingRequestModel.name == user['name'])
         user_requests_dicts = [user_request.to_dict() for user_request in user_requests_list]

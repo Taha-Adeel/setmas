@@ -44,11 +44,6 @@ def view_pending_requests():
 def view_rejected_requests():
     return RequestsList.get_rejected_requests()
 
-#show all cancelled requests
-@app.route('/cancelled_requests', methods=['GET'])
-def view_cancelled_requests():
-    return RequestsList.get_cancelled_requests()
-
 #get requests by user
 @app.route('/user_requests', methods=['GET'])
 def view_user_requests():
@@ -80,6 +75,16 @@ def accept_request():
 def reject_request():
     request_data = request.get_json()
     success, msg = RequestsList.reject_request(request_data)
+
+    if success:
+        return make_response({'Response': msg}, 200)
+    return make_response({'Response': msg}, 400)
+
+# cancel request
+@app.route('/cancel_request')
+def cancel_request():
+    request_data = request.json()
+    success, msg = RequestsList.cancel_request(request_data)
 
     if success:
         return make_response({'Response': msg}, 200)
