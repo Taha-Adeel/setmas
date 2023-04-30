@@ -69,10 +69,10 @@ def reject_request():
     return make_response(success, 200)
 
 #get requests by user
-@app.route('/user_requests', methods=['GET'])
+@app.route('/user_requests', methods=['GET', 'POST'])
 def view_user_requests():
     data = request.get_json()
-    user_requests_list = BookingRequestsModel.query.filter(BookingRequestsModel.name == data['name'])
+    user_requests_list = BookingRequestsModel.query.filter(BookingRequestsModel.email == data['email'])
     user_requests_dict = [user_request.to_dict() for user_request in user_requests_list]
     return jsonify(user_requests_dict)
 
