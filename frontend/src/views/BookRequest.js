@@ -5,6 +5,8 @@ import { useState, useRef } from "react";
 import { useContext } from "react";
 import { AuthContext } from '../AuthContext.js';
 // react-bootstrap components
+const backendServerLocation = process.env.REACT_APP_BACKEND_SERVER_LOCATION;
+
 
 import {
   Badge,
@@ -89,7 +91,7 @@ function Book() {
       errorNotify(place, "Email field is empty");
       flag = false ;
     }
-    if (!("description" in data)) {
+    if (!("details" in data)) {
       errorNotify(place, "Details field is empty");
       flag = false ;
     }
@@ -97,7 +99,7 @@ function Book() {
       errorNotify(place, "Title field is empty");
       flag = false ;
     }
-    if (!("seminardate" in data)) {
+    if (!("date" in data)) {
       errorNotify(place, "Date field is empty");
       flag = false ;
     }
@@ -108,24 +110,24 @@ function Book() {
         errorNotify(place, "Date cannot be earlier than today");
         flag = false ;
       }
-    if (!("seminarstart" in data)) {
+    if (!("start_time" in data)) {
       errorNotify(place, "Start time field is empty");
       flag = false ;
     }
-    if (!("seminarend" in data)) {
+    if (!("end_time" in data)) {
       errorNotify(place, "End time field is empty");
       flag = false ;
     }
-    if (data.seminarstart >= data.seminarend) {
+    if (data.start_time >= data.end_time) {
       errorNotify(place, "Start time cannot be earlier than end time");
       flag = false ;
     }
-    if (!("venue" in data)) {
+    if (!("room" in data)) {
       errorNotify(place, "Room field is empty");
       flag = false ;
     }
-    if (data.venue === 'Default Room') {
-      errorNotify(place, "Room field is empty");
+    if (data.room === 'Default Room') {
+      errorNotify(place, "Room field is empty, set to default placeholder");
       flag = false ;
     }
     return flag;
@@ -134,7 +136,7 @@ function Book() {
         
     e.preventDefault();
     const data = serialize(e.target, { hash: true, disabled: true });
-    let appendedData = { ...data, venue: roomstate };
+    let appendedData = { ...data, room: roomstate };
     if(!('CSMAIL' in appendedData))
       appendedData = {...appendedData, CSMAIL: false};
     if (!('AIMAIL' in appendedData))
@@ -149,11 +151,12 @@ function Book() {
       
       console.log(appendedData);
       console.log("Form will be submitted with the above data");
-      formRef.current.reset();
-
+      //formRef.current.reset();
+      console.log("yes");
+      console.log(`${backendServerLocation}`);
       //API CALL FOR ADDING BOOKING REQ HERE
-      const response = await fetch('http://localhost:5000/create_request', {
-        method: 'POST',
+      const response = await fetch(`${backendServerLocation}/create_request`, {
+        method: 'PUT',
         headers: {
           'Content-Type' : 'application/json'
         },
@@ -161,9 +164,10 @@ function Book() {
         }
       );
       const responsedata = await response.json(); 
+      console.log("we got the response from the api endpoint");
       if(!response.ok)
       {
-        const message = "an error occurred: ${response.status} ${response.statusText}";
+        const message = `an error occurred: ${response.status} ${response.statusText}`;
         throw new Error(message);
       }
       console.log("Request went through ");
@@ -267,7 +271,7 @@ function Book() {
                       <Form.Group>
                         <label>Date Of Seminar(dd/mm/yyyy)*</label>
                          <Form.Control
-                          name = "seminardate"
+                          name = "date"
                           placeholder="dd/mm/yyyy"
                           type="date"
                         >
@@ -280,7 +284,7 @@ function Book() {
                       <Form.Group>
                         <label>Start Time*</label>
                         <Form.Control
-                          name = "seminarstart"
+                          name = "start_time"
                           placeholder="hh:mm"
                           type="time"
                         >
@@ -292,7 +296,7 @@ function Book() {
                       <Form.Group>
                         <label>End Time*</label>
                         <Form.Control
-                          name = "seminarend"
+                          name = "end_time"
                           placeholder="hh:mm"
                           type="time"
                         >
@@ -347,7 +351,7 @@ function Book() {
                           cols="80"
                           placeholder="Here can be your description"
                           rows="3"
-                          name ="description"
+                          name ="details"
                           as="textarea"
                         ></Form.Control>
                       </Form.Group>

@@ -1,6 +1,6 @@
 from . import db
 
-class AdminManagement(db.Model):
+class AdminModel(db.Model):
     __tablename__ = 'Admins'
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(80), nullable=False)

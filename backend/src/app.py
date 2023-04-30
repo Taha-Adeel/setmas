@@ -1,9 +1,10 @@
 import os
 from flask import Flask, request, jsonify, make_response
 from flask_cors import CORS
-from util.database.admin_list_model import AdminManagement
+from util.database.admin_list_model import AdminModel
 from util.database.request_list_model import BookingRequestsModel
 from util.database import db, create_db_tables
+from admin.admin_list import AdminList
 
 app = Flask(__name__, template_folder='../templates')
 cors = CORS(app)
@@ -27,7 +28,9 @@ def create_tables():
 # Creating a request
 @app.route('/create_request', methods=['PUT'])
 def create_request():
+    #print("create request getting hit");
     data = request.get_json()
+    print(request.get_json())
     # id subject to modification
     booking_request = BookingRequestsModel(name=data['name'], email=data['email'], date=data['date'], start_time=data['start_time'], end_time=data['end_time'], room=data['room'], title=data['title'], details=data['details'], status='Pending')
 
@@ -36,7 +39,10 @@ def create_request():
     # add to database
     db.session.add(booking_request)
     db.session.commit()
+    
 
+    success = {'status': 'success'}
+    return make_response(success, 200)
     # return booking_request
     success = {'status': 'success'}
     return make_response(success, 200)
@@ -98,22 +104,19 @@ def view_user_requests():
 
 
 # viewing admin list
-# @marshal_with(admin_list_resource_fields)
 @app.route('/admin_list', methods=['GET'])
 def view_admins_list():
-    admins_list = AdminManagement.query.all()
-    admins_dicts = [admin.to_dict() for admin in admins_list]
-    return jsonify(admins_dicts)
+    return AdminList.get_admin_list()
 
 @app.route('/add_admin', methods=['PUT'])
 def add_admin():
     data = request.get_json()
-    admin_count = AdminManagement.query.count()  # Get the number of admins currently in the database
+    admin_count = AdminModel.query.count()  # Get the number of admins currently in the database
 
     if admin_count == 0:
-        new_admin = AdminManagement(name=data['name'], email=data['email'], rootAdminStatus='YES')
+        new_admin = AdminModel(name=data['name'], email=data['email'], rootAdminStatus='YES')
     else:
-        new_admin = AdminManagement(name=data['name'], email=data['email'], rootAdminStatus='NO')
+        new_admin = AdminModel(name=data['name'], email=data['email'], rootAdminStatus='NO')
     
     
 
@@ -130,7 +133,7 @@ def add_admin():
 @app.route('/delete_admin', methods=['DELETE'])
 def delete_admin():
     data = request.get_json()
-    del_admin = AdminManagement.query.filter(AdminManagement.email == data['email']).first()
+    del_admin = AdminModel.query.filter(AdminModel.email == data['email']).first()
     failure = {'status': 'Admin not found'}
     if del_admin is None:
         return make_response(failure, 404)
@@ -145,7 +148,7 @@ def delete_admin():
 def makeRootAdmin():
     data = request.get_json()
     # make current super admin to just admin
-    admin = AdminManagement.query.filter(AdminManagement.email == data['superEmail']).first()
+    admin = AdminModel.query.filter(AdminModel.email == data['superEmail']).first()
     # print('old admin')
     # print(admin)
     if admin:
@@ -153,7 +156,7 @@ def makeRootAdmin():
         db.session.commit()
 
     #transfer super admin powers
-    newRootAdmin = AdminManagement.query.filter(AdminManagement.email == data['email']).first()
+    newRootAdmin = AdminModel.query.filter(AdminModel.email == data['email']).first()
     print(newRootAdmin.rootAdminStatus)
     if newRootAdmin:
         newRootAdmin.rootAdminStatus = 'YES'
@@ -166,7 +169,7 @@ def makeRootAdmin():
 def checkUserLevel():
     data = request.get_json()
 
-    find = AdminManagement.query.filter(AdminManagement.email == data['email']).first()
+    find = AdminModel.query.filter(AdminModel.email == data['email']).first()
     if find is None:
         reply = {'level': 'user'}
     else:
