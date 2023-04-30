@@ -1,146 +1,27 @@
+# app.py
 from flask import Flask, request, jsonify, make_response
-# from flask_restful import Resource, Api, reqparse, abort, fields, marshal_with
-from flask_sqlalchemy import SQLAlchemy
-# from wtforms import validators, Email, Time, BooleanField
-from datetime import datetime
-import os
 from flask_cors import CORS
+import os
+from backend.src.util.database.admin_list_model import AdminManagement
+from backend.src.util.database.request_list_model import BookingRequestsModel
+from util.database import db, create_tables
 
 app = Flask(__name__, template_folder='../templates')
-# api = Api(app)
 cors = CORS(app)
 
-#key for CSRF
+# Configuration
 app.config['SECRET_KEY'] = 'mysecretkey'
 app.config['CORS_ORIGINS'] = ['http://localhost:3000']
-
-
-## database config ##
-basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, '../data/database.sqlite')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(os.path.join(os.path.abspath(os.path.dirname(__file__)), '../data'), 'database.sqlite')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db = SQLAlchemy(app)
+# Initialize the database
+db.init_app(app)
 
-# db.create_all()
-##end
-
-# args for booking-requests
-# request_args = reqparse.RequestParser()
-# request_args.add_argument('name', type=str, required=True)
-# request_args.add_argument('department', type=str, required=True)
-# request_args.add_argument('email', type=Email(), required=True)
-# request_args.add_argument('date', type=lambda x: datetime.strptime(x, '%Y-%m-%d'), required=True)
-# request_args.add_argument('start_time', type=Time(format='%H:%M'), required=True)
-# request_args.add_argument('end_time', type=Time(format='%H:%M'), required=True)
-# request_args.add_argument('room', type=str, required=True)
-# request_args.add_argument('title', type=str, required=True)
-# request_args.add_argument('details', type=str, required=True)
-# # request_args.add_argument('Seminar-List', type=str, required=True)
-# request_args.add_argument('requestID', type=int)    #null, needs to be assigned
-# request_args.add_argument('status', type=validators.OneOf(['Pending', 'Accepted', 'Rejected'])) #null, assign it to pending
-
-# # response marshaller for booking requests
-# booking_request_resource_fields = {
-#     'name': fields.String,
-#     'email': fields.String,
-#     'date': fields.String,
-#     'start_time': fields.String,
-#     'end_time': fields.String,
-#     'room': fields.String,
-#     'title': fields.String,
-#     'details': fields.String,
-#     # 'RequestID': fields.Integer,
-#     'status': fields.String
-# }
-
-# # args for admin-list
-# admin_args = reqparse.RequestParser()
-# admin_args.add_argument('name', type=str, required=True)
-# admin_args.add_argument('email', type=Email(), required=True)
-# admin_args.add_argument('rootAdmin_Status', type=bool)
-
-# # response marshaller for admin list
-# admin_list_resource_fields = {
-#     'name': fields.String,
-#     'email': fields.String,
-#     'rootAdmin_Status': fields.Boolean
-# }
-
-class BookingRequestsModel(db.Model):
-    __tablename__ = 'Booking_Requests'
-    requestID = db.Column(db.Integer, primary_key = True)
-    name = db.Column(db.String(80), nullable=False)
-    email = db.Column(db.String(80), nullable=False)
-    date = db.Column(db.String(20), nullable=False)
-    start_time = db.Column(db.String(20), nullable=False)
-    end_time = db.Column(db.String(20), nullable=False)
-    room = db.Column(db.String(80), nullable=False)
-    title = db.Column(db.String(150), nullable=False)
-    details = db.Column(db.String(800), nullable=False)
-    status = db.Column(db.String(80), nullable=False)
-
-    def __init__(self, name, email, date, start_time, end_time, room, title, details, status):
-        self.name = name
-        self.email = email
-        self.date = date
-        self.start_time = start_time
-        self.end_time = end_time
-        self.room = room
-        self.title = title
-        self.details = details
-        self.status = status
-
-
-        # fill fields
-
-    def __repr__(self):
-        return f"Request by {self.name}"
-        # add info about request
-
-    def to_dict(self):
-        return {
-            'requestID': self.requestID,
-            'name': self.name,
-            'email': self.email,
-            'date': self.date,
-            'start_time': self.start_time,
-            'end_time': self.end_time,
-            'room': self.room,
-            'title': self.title,
-            'details': self.details,
-            'status': self.status
-        }
-
-# Model for Admin Management
-class AdminManagement(db.Model):
-    __tablename__ = 'Admins'
-    id = db.Column(db.Integer, primary_key = True)
-    name = db.Column(db.String(80), nullable=False)
-    email = db.Column(db.String(80), nullable=False)
-    rootAdminStatus = db.Column(db.String(80), nullable=False)
-
-    def __init__(self, name, email, rootAdminStatus):
-        self.name = name
-        self.email = email
-        self.rootAdminStatus = rootAdminStatus
-
-    def __repr__(self):
-        return f"Name:{self.name}  Email:{self.email}"
-    
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'name': self.name,
-            'email': self.email,
-            'rootAdminStatus': self.rootAdminStatus
-        }
-
-
-
+# Create tables
 @app.before_first_request
 def create_tables():
-    db.create_all()
+    create_tables(app)
 
 ############## Booking Request Functions ##############
 

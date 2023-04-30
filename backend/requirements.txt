@@ -1,10 +1,5 @@
 Flask
 Flask-Cors
 Flask-Dance
-Flask-Migrate
-Flask-RESTful
 Flask-SQLAlchemy
-Flask-WTF
-WTForms
-WTForms-Components
 requests
