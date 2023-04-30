@@ -5,6 +5,8 @@ import { useState, useRef } from "react";
 import { useContext } from "react";
 import { AuthContext } from '../AuthContext.js';
 // react-bootstrap components
+const backendServerLocation = process.env.REACT_APP_BACKEND_SERVER_LOCATION;
+
 
 import {
   Badge,
