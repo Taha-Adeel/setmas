@@ -2,7 +2,7 @@ from .singletonSQLAlchemy import SingletonSQLAlchemy
 
 db = SingletonSQLAlchemy()
 
-from .admin_list_model import AdminManagement
+from .admin_list_model import AdminModel
 from .request_list_model import BookingRequestsModel
 
 def create_db_tables(app):
