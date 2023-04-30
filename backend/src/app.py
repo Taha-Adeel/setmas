@@ -2,11 +2,12 @@ import os
 from flask import Flask, request, jsonify, make_response
 from flask_cors import CORS
 from util.database.admin_list_model import AdminModel
-from util.database.request_list_model import BookingRequestsModel
+from util.database.request_list_model import BookingRequestModel
 from util.database import db, create_db_tables
 from admin.admin_list import AdminList
+from requests.requests_list import RequestsList
 
-app = Flask(__name__, template_folder='../templates')
+app = Flask(__name__)
 cors = CORS(app)
 
 # Configuration
@@ -25,59 +26,68 @@ def create_tables():
 
 ############## Booking Request Functions ##############
 
-# Creating a request
-@app.route('/create_request', methods=['PUT'])
-def create_request():
-    data = request.get_json()
-    # id subject to modification
-    booking_request = BookingRequestsModel(name=data['name'], email=data['email'], date=data['date'], start_time=data['start_time'], end_time=data['end_time'], room=data['room'], title=data['title'], details=data['details'], status='Pending')
-
-    #checks and modifications
-
-    # add to database
-    db.session.add(booking_request)
-    db.session.commit()
-
-    success = {'status': 'success'}
-    return make_response(success, 200)
-    # return booking_request
-
-#show all  requests
+#show all requests
 @app.route('/request_list', methods=['GET'])
 def view_requests_list():
-    requests_list = BookingRequestsModel.query.all()
-    requests_dict = [request.to_dict() for request in requests_list]
-    return jsonify(requests_dict)
+    return RequestsList.get_all_requests()
 
-# accept a request
-@app.route('/accept_request', methods=['PATCH'])
-def accept_request():
-    data = request.get_json()
-    accept = BookingRequestsModel.query.filter(BookingRequestsModel.requestID == data['requestID']).first()
-    accept.status = 'Accepted'
-    db.session.commit()
+#show all accepted requests
+@app.route('/accepted_requests', methods=['GET'])
+def view_accepted_requests():
+    return RequestsList.get_accepted_requests()
 
-    success = {'status': 'success'}
-    return make_response(success, 200)
+#show all pending requests
+@app.route('/pending_requests', methods=['GET'])
+def view_pending_requests():
+    return RequestsList.get_pending_requests()
 
-# reject a request
-@app.route('/reject_request', methods=['PATCH'])
-def reject_request():
-    data = request.get_json()
-    reject = BookingRequestsModel.query.filter(BookingRequestsModel.requestID == data['requestID']).first()
-    reject.status = 'Rejected'
-    db.session.commit()
+#show all rejected requests
+@app.route('/rejected_requests', methods=['GET'])
+def view_rejected_requests():
+    return RequestsList.get_rejected_requests()
 
-    success = {'status': 'success'}
-    return make_response(success, 200)
+#show all cancelled requests
+@app.route('/cancelled_requests', methods=['GET'])
+def view_cancelled_requests():
+    return RequestsList.get_cancelled_requests()
 
 #get requests by user
 @app.route('/user_requests', methods=['GET'])
 def view_user_requests():
-    data = request.get_json()
-    user_requests_list = BookingRequestsModel.query.filter(BookingRequestsModel.name == data['name'])
-    user_requests_dict = [user_request.to_dict() for user_request in user_requests_list]
-    return jsonify(user_requests_dict)
+    user = request.get_json()
+    return RequestsList.get_user_requests(user)
+
+# Creating a request
+@app.route('/booking_request', methods=['PUT'])
+def booking_request():
+    request_data = request.get_json()
+    success, msg = RequestsList.add_new_request(request_data)
+
+    if success:
+        return make_response({'Response': msg}, 200)
+    return make_response({'Response': msg}, 400)
+
+
+# accept a request
+@app.route('/accept_request', methods=['PATCH'])
+def accept_request():
+    request_data = request.get_json()
+    success, msg = RequestsList.accept_request(request_data)
+
+    if success:
+        return make_response({'Response': msg}, 200)
+    return make_response({'Response': msg}, 400)
+
+# reject a request
+@app.route('/reject_request', methods=['PATCH'])
+def reject_request():
+    request_data = request.get_json()
+    success, msg = RequestsList.reject_request(request_data)
+
+    if success:
+        return make_response({'Response': msg}, 200)
+    return make_response({'Response': msg}, 400)
+
 
     
 ############## Admin Management Functions ##############

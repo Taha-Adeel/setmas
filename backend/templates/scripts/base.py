@@ -11,7 +11,7 @@ os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = '1'
 os.environ["OAUTHLIB_RELAX_TOKEN_SCOPE"] = '1'
 
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder="../")
 
 # app.app_context().push()
 

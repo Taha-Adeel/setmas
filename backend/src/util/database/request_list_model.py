@@ -1,6 +1,6 @@
 from . import db
 
-class BookingRequestsModel(db.Model):
+class BookingRequestModel(db.Model):
     __tablename__ = 'Booking_Requests'
     requestID = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(80), nullable=False)
