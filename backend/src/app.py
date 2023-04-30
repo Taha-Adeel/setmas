@@ -90,74 +90,39 @@ def view_admins_list():
 
 @app.route('/add_admin', methods=['PUT'])
 def add_admin():
-    data = request.get_json()
-    admin_count = AdminModel.query.count()  # Get the number of admins currently in the database
-
-    if admin_count == 0:
-        new_admin = AdminModel(name=data['name'], email=data['email'], rootAdminStatus='YES')
-    else:
-        new_admin = AdminModel(name=data['name'], email=data['email'], rootAdminStatus='NO')
+    admin_data = request.get_json()
+    success, msg = AdminList.add_admin(admin_data)
     
-    
-
-    db.session.add(new_admin)
-    db.session.commit()
-    success = {'status': 'success'}
-    failure = {'status': 'could not add admin'}
-    # response = make_response(success, 200) # 200 is the status code
-    if new_admin:
-        return make_response(success, 200)
-    return make_response(failure, 404)
+    if success:
+        return make_response({'Resonse': msg}, 200)
+    return make_response({'Resonse': msg}, 400)
 
 
 @app.route('/delete_admin', methods=['DELETE'])
 def delete_admin():
-    data = request.get_json()
-    del_admin = AdminModel.query.filter(AdminModel.email == data['email']).first()
-    failure = {'status': 'Admin not found'}
-    if del_admin is None:
-        return make_response(failure, 404)
-    
-    db.session.delete(del_admin)
-    db.session.commit()
-    success = {'status': 'success'}
-    return make_response(success, 200)
+    admin_data = request.get_json()
+    success, msg = AdminList.delete_admin(admin_data)
+
+    if success:
+        return make_response({'Response': msg}, 200)
+    return make_response({'Response': msg}, 400)
     
 
-@app.route('/makeRootAdmin', methods=['PATCH'])
-def makeRootAdmin():
-    data = request.get_json()
-    # make current super admin to just admin
-    admin = AdminModel.query.filter(AdminModel.email == data['superEmail']).first()
-    # print('old admin')
-    # print(admin)
-    if admin:
-        admin.rootAdminStatus = 'NO'
-        db.session.commit()
+@app.route('/make_super_admin', methods=['PATCH'])
+def make_super_admin():
+    admin_data = request.get_json()
+    success, msg = AdminList.make_super_admin(admin_data)
 
-    #transfer super admin powers
-    newRootAdmin = AdminModel.query.filter(AdminModel.email == data['email']).first()
-    print(newRootAdmin.rootAdminStatus)
-    if newRootAdmin:
-        newRootAdmin.rootAdminStatus = 'YES'
-        db.session.commit()
-
-    success = {'status': 'success'}
-    return make_response(success, 200)
-
-@app.route('/checkUserLevel', methods=['GET', 'POST'])
-def checkUserLevel():
-    data = request.get_json()
-
-    find = AdminModel.query.filter(AdminModel.email == data['email']).first()
-    if find is None:
-        reply = {'level': 'user'}
-    else:
-        if find.rootAdminStatus == 'YES':
-            reply = {'level': 'superadmin'}
-        else:
-            reply = {'level': 'admin'}
+    if success:
+        return make_response({'Response': msg}, 200)
+    return make_response({'Response': msg}, 400)
     
+
+@app.route('/check_user_state', methods=['GET'])
+def check_user_state():
+    admin_data = request.get_json()
+    state = AdminList.check_user_level(admin_data)
+    reply = {'state': state}
     return reply.jsonify()
 
     

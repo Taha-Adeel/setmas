@@ -5,12 +5,12 @@ class AdminModel(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(80), nullable=False)
-    rootAdminStatus = db.Column(db.String(80), nullable=False)
+    isSuperAdmin = db.Column(db.String(80), nullable=False)
 
-    def __init__(self, name, email, rootAdminStatus):
+    def __init__(self, name, email, isSuperAdmin):
         self.name = name
         self.email = email
-        self.rootAdminStatus = rootAdminStatus
+        self.isSuperAdmin = isSuperAdmin
 
     def __repr__(self):
         return f"Name:{self.name}  Email:{self.email}"
@@ -20,5 +20,5 @@ class AdminModel(db.Model):
             'id': self.id,
             'name': self.name,
             'email': self.email,
-            'rootAdminStatus': self.rootAdminStatus
+            'isSuperAdmin': self.isSuperAdmin
         }
