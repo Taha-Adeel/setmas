@@ -151,11 +151,12 @@ function Book() {
       
       console.log(appendedData);
       console.log("Form will be submitted with the above data");
-      formRef.current.reset();
-
+      //formRef.current.reset();
+      console.log("yes");
+      console.log(`${backendServerLocation}`);
       //API CALL FOR ADDING BOOKING REQ HERE
-      const response = await fetch('http://localhost:5000/create_request', {
-        method: 'POST',
+      const response = await fetch(`${backendServerLocation}/create_request`, {
+        method: 'PUT',
         headers: {
           'Content-Type' : 'application/json'
         },
@@ -163,9 +164,10 @@ function Book() {
         }
       );
       const responsedata = await response.json(); 
+      console.log("we got the response from the api endpoint");
       if(!response.ok)
       {
-        const message = "an error occurred: ${response.status} ${response.statusText}";
+        const message = `an error occurred: ${response.status} ${response.statusText}`;
         throw new Error(message);
       }
       console.log("Request went through ");
