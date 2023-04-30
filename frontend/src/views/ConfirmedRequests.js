@@ -63,7 +63,27 @@ export default class ConfirmRequestsClass extends Component {
         ),
         Dialog.Action(
           'Cancel Approved Request',
-          () => { console.log('Cancel is clicked'); console.log(confirmedRequest); },
+          () => { 
+            console.log('Cancel is clicked');
+            console.log(confirmedRequest);
+            fetch(`http://127.0.0.1:5000/reject_request`, {
+              method: 'PATCH',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                requestID: confirmedRequest.requestID
+              })
+            })
+              .then(response => response.json())
+              .then(dataa => {
+                console.log(dataa);
+                this.state.data = this.state.data.filter(entry => entry.requestID != confirmedRequest.requestID);
+              })
+              .catch(error => {
+                console.error(error);
+              });
+            },
           'btn-danger'
         )
       ]
@@ -130,12 +150,12 @@ export default class ConfirmRequestsClass extends Component {
         <td>{confirmedRequest.name}</td>
         {/* <td>{confirmedRequest.dept}</td> */}
         <td>{confirmedRequest.email}</td>
-        <td>{confirmedRequest.seminardate}</td>
-        <td>{confirmedRequest.seminarstart}</td>
-        <td>{confirmedRequest.seminarend}</td>
+        <td>{confirmedRequest.date}</td>
+        <td>{confirmedRequest.start_time}</td>
+        <td>{confirmedRequest.end_time}</td>
         <td>{confirmedRequest.title}</td>
         {/* <td>{confirmedRequest.desc}</td> */}
-        <td>{confirmedRequest.venue}</td>
+        <td>{confirmedRequest.room}</td>
         {/* <td>{mergeMailingLists(confirmedRequest)}</td>
       <td>{mergeRemainders(confirmedRequest)}</td> */}
         <td>

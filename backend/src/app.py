@@ -61,6 +61,14 @@ def view_pending_requests():
     request_dict = [request.to_dict() for request in pending_requests]
     return jsonify(request_dict)
 
+#show Accepted Requests
+@app.route("/accepted_requests", methods=['GET'])
+def view_accepted_requests():
+    accepted_requests = BookingRequestsModel.query.filter(BookingRequestsModel.status == 'Accepted')
+    request_dict = [request.to_dict() for request in accepted_requests]
+    return jsonify(request_dict)
+
+
 # accept a request
 @app.route('/accept_request', methods=['PATCH'])
 def accept_request():

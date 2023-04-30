@@ -22,7 +22,7 @@ function ViewRequests()
 {
   const { userType, setUserType, email, setEmail, name, setName, profileURL, setProfileURL } = useContext(AuthContext);
   const [data, setData] = useState([]);
-
+  const backendServerLocation = process.env.REACT_APP_BACKEND_SERVER_LOCATION;
 
   function generateRequestEntry(request, num) {
     return (
@@ -39,7 +39,7 @@ function ViewRequests()
   }
 
   useEffect(() => {
-    fetch('http://127.0.0.1:5000/user_requests', {
+    fetch(`http://127.0.0.1:5000/user_requests`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
