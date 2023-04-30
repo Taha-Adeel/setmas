@@ -2,8 +2,8 @@
 from flask import Flask, request, jsonify, make_response
 from flask_cors import CORS
 import os
-from backend.src.util.database.admin_list_model import AdminManagement
-from backend.src.util.database.request_list_model import BookingRequestsModel
+from util.database.admin_list_model import AdminManagement
+from util.database.request_list_model import BookingRequestsModel
 from util.database import db, create_tables
 
 app = Flask(__name__, template_folder='../templates')
