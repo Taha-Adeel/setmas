@@ -110,15 +110,15 @@ function Book() {
         errorNotify(place, "Date cannot be earlier than today");
         flag = false ;
       }
-    if (!("start_date" in data)) {
+    if (!("start_time" in data)) {
       errorNotify(place, "Start time field is empty");
       flag = false ;
     }
-    if (!("end_date" in data)) {
+    if (!("end_time" in data)) {
       errorNotify(place, "End time field is empty");
       flag = false ;
     }
-    if (data.seminarstart >= data.seminarend) {
+    if (data.start_time >= data.end_time) {
       errorNotify(place, "Start time cannot be earlier than end time");
       flag = false ;
     }
@@ -126,8 +126,8 @@ function Book() {
       errorNotify(place, "Room field is empty");
       flag = false ;
     }
-    if (data.venue === 'Default Room') {
-      errorNotify(place, "Room field is empty");
+    if (data.room === 'Default Room') {
+      errorNotify(place, "Room field is empty, set to default placeholder");
       flag = false ;
     }
     return flag;
@@ -136,7 +136,7 @@ function Book() {
         
     e.preventDefault();
     const data = serialize(e.target, { hash: true, disabled: true });
-    let appendedData = { ...data, venue: roomstate };
+    let appendedData = { ...data, room: roomstate };
     if(!('CSMAIL' in appendedData))
       appendedData = {...appendedData, CSMAIL: false};
     if (!('AIMAIL' in appendedData))
