@@ -148,7 +148,8 @@ function Book() {
     {
       notify(e, place);
       console.log(appendedData);
-      // formRef.current.reset();
+      
+      formRef.current.reset();
     }
     else{
       // errorNotify(place, type);
