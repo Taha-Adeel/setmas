@@ -6,7 +6,7 @@ from datetime import datetime
 import os
 from flask_cors import CORS
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='../templates')
 # api = Api(app)
 cors = CORS(app)
 
@@ -17,7 +17,7 @@ app.config['CORS_ORIGINS'] = ['http://localhost:3000']
 
 ## database config ##
 basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'data.sqlite')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, '../data/database.sqlite')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)

@@ -135,3 +135,6 @@ dmypy.json
 # Node modules
 **/node_modules/
 package-lock.json
+
+# Database
+*.sqlite
