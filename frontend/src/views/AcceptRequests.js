@@ -15,6 +15,7 @@ import {
 import Dialog from 'react-bootstrap-dialog';
 import { servicesVersion } from "typescript";
 import { useState, useRef, useEffect } from "react";
+const backendServerLocation = process.env.REACT_APP_BACKEND_SERVER_LOCATION;
 
 
 function generateDialogBody(pendingRequest) {
@@ -33,7 +34,7 @@ export default class AcceptRequestsClass extends Component {
   }
   componentDidMount() {
     console.log("Mounting");
-    fetch('http://127.0.0.1:5000/pending_requests', {
+    fetch(`http://127.0.0.1:5000/pending_requests`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -58,7 +59,7 @@ export default class AcceptRequestsClass extends Component {
           () => {
             console.log('Reject is clicked');
             console.log(pendingRequest);
-            fetch('http://127.0.0.1:5000/reject_request', {
+            fetch(`http://127.0.0.1:5000/reject_request`, {
               method: 'PATCH',
               headers: {
                 'Content-Type': 'application/json'
@@ -68,8 +69,9 @@ export default class AcceptRequestsClass extends Component {
               })
             })
               .then(response => response.json())
-              .then(data => {
-                console.log(data);
+              .then(dataa => {
+                console.log(dataa);
+                this.state.data = this.state.data.filter(entry => entry.requestID!=pendingRequest.requestID);
               })
               .catch(error => {
                 console.error(error);
@@ -82,7 +84,7 @@ export default class AcceptRequestsClass extends Component {
           () => { 
             console.log('Accept is clicked');
             console.log(pendingRequest);
-            fetch('http://127.0.0.1:5000/accept_request', {
+            fetch(`http://127.0.0.1:5000/accept_request`, {
               method: 'PATCH',
               headers: {
                 'Content-Type': 'application/json'
@@ -94,65 +96,18 @@ export default class AcceptRequestsClass extends Component {
             .then(response => response.json())
             .then(data => {
               console.log(data);
+              this.setState(this.state.data.filter(entry => entry.requestID != pendingRequest.requestID));
             })
             .catch(error => {
               console.error(error);
             });
-         })
+         },
+         'btn-primary')
       ]
     });
   }
 
   createFormattedRequestsList() {
-    //here we get the list of the pending requests as a json object of some kind 
-
-    // const pendingRequests = [
-    //   {
-    //     "name": "PRASHANTH SRIRAM S",
-    //     "dept": "CSE",
-    //     "email": "cs20btech11039@iith.ac.in",
-    //     "seminardate": "2023-04-20",
-    //     "seminarstart": "19:39",
-    //     "seminarend": "20:41",
-    //     "title": "On How to book seminars",
-    //     "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    //     "venue": "B115",
-    //     "CSMAIL": "false",
-    //     "AIMAIL": "false",
-    //     "hours2": "true",
-    //     "days1": "false"
-    //   },
-    //   {
-    //     "name": "John Doe",
-    //     "dept": "MECH",
-    //     "email": "me20btech11039@iith.ac.in",
-    //     "seminardate": "2023-04-2",
-    //     "seminarstart": "07:39",
-    //     "seminarend": "20:41",
-    //     "title": "Nenjam sonnathe",
-    //     "desc": 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-    //     "venue": "ALH1",
-    //     "CSMAIL": "false",
-    //     "AIMAIL": "false",
-    //     "hours2": "true",
-    //     "days1": "true"
-    //   },
-    //   {
-    //     "name": "PRASHANTH SRIRAM S",
-    //     "dept": "adsdf",
-    //     "email": "cs20btech11039@iith.ac.in",
-    //     "seminardate": "2023-04-20",
-    //     "seminarstart": "19:39",
-    //     "seminarend": "20:41",
-    //     "title": "Yet another title",
-    //     "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    //     "venue": "CH2",
-    //     "CSMAIL": "false",
-    //     "AIMAIL": "false",
-    //     "hours2": "false",
-    //     "days1": "false"
-    //   }
-    // ];
     return this.state.data.map((pendingRequest, index) => {
       return (<tr key={index}>{this.getRequestEntry(pendingRequest, index + 1)}</tr>);
     });
