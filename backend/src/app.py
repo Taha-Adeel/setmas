@@ -44,6 +44,8 @@ def create_request():
     success = {'status': 'success'}
     return make_response(success, 200)
     # return booking_request
+    success = {'status': 'success'}
+    return make_response(success, 200)
 
 #show all  requests
 @app.route('/request_list', methods=['GET'])
@@ -51,6 +53,13 @@ def view_requests_list():
     requests_list = BookingRequestsModel.query.all()
     requests_dict = [request.to_dict() for request in requests_list]
     return jsonify(requests_dict)
+
+#show Pending Requests
+@app.route("/pending_requests", methods=['GET'])
+def view_pending_requests():
+    pending_requests = BookingRequestsModel.query.filter(BookingRequestsModel.status == 'Pending')
+    request_dict = [request.to_dict() for request in pending_requests]
+    return jsonify(request_dict)
 
 # accept a request
 @app.route('/accept_request', methods=['PATCH'])
@@ -75,10 +84,10 @@ def reject_request():
     return make_response(success, 200)
 
 #get requests by user
-@app.route('/user_requests', methods=['GET'])
+@app.route('/user_requests', methods=['GET', 'POST'])
 def view_user_requests():
     data = request.get_json()
-    user_requests_list = BookingRequestsModel.query.filter(BookingRequestsModel.name == data['name'])
+    user_requests_list = BookingRequestsModel.query.filter(BookingRequestsModel.email == data['email'])
     user_requests_dict = [user_request.to_dict() for user_request in user_requests_list]
     return jsonify(user_requests_dict)
 
