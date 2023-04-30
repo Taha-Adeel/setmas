@@ -67,7 +67,6 @@ def booking_request():
         return make_response({'Response': msg}, 200)
     return make_response({'Response': msg}, 400)
 
-
 # accept a request
 @app.route('/accept_request', methods=['PATCH'])
 def accept_request():
@@ -89,7 +88,6 @@ def reject_request():
     return make_response({'Response': msg}, 400)
 
 
-    
 ############## Admin Management Functions ##############
 
 

@@ -19,9 +19,32 @@ import {
 import serialize from "form-serialize";
 import { useContext } from "react";
 import { AuthContext } from '../AuthContext.js';
+import NotificationAlert from "react-notification-alert";
 
 
 function AdminList() {
+
+  const notificationAlertRef = React.useRef(null);  
+
+  const errorNotify = (place, msg = "Invalid email. Please enter a valid iith email address. ") => {
+    //var type = "success";
+    var options = {};
+    options = {
+      place: place,
+      message: (
+        <div>
+          <div>
+            {msg}
+          </div>
+        </div>
+      ),
+      type: 'danger',
+      icon: "nc-icon nc-simple-remove",
+      autoDismiss: 7,
+    };
+    notificationAlertRef.current.notificationAlert(options);
+    //e.preventDefault();
+  };
 
   const formRef = useRef(null);
 
@@ -42,13 +65,20 @@ function AdminList() {
 
   function addAdmin (e) {
 
-    // ! here we will make an api call to google people in order to get the name 
+    e.preventDefault();
     const newadmindata = serialize(e.target, {hash: true, disabled: true});
     console.log(newadmindata);
     console.log("lol"); 
+    if(!newadmindata.email.endsWith('@iith.ac.in'))
+    {
+      errorNotify("tc");
+    }
+    else{
+
+    }
 
     formRef.current.reset();
-    e.preventDefault();
+    
 
   }
   function getAdminEntry(admininfo, num) {
@@ -127,6 +157,9 @@ function AdminList() {
   if(userType !== "notLoggedIn")
   return (
     <>
+    <div>
+        <NotificationAlert ref={notificationAlertRef} />
+    </div>
       <Container fluid>
         <Row>
           <Col md="12">

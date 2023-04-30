@@ -5,6 +5,8 @@ import { useState, useRef } from "react";
 import { useContext } from "react";
 import { AuthContext } from '../AuthContext.js';
 // react-bootstrap components
+const backendServerLocation = process.env.REACT_APP_BACKEND_SERVER_LOCATION;
+
 
 import {
   Badge,
@@ -45,13 +47,13 @@ function Book() {
       message: (
         <div>
           <div>
-            Your user type is {userType}. Your request has been submitted successfully.
+             Your request has been submitted successfully.
           </div>
         </div>
       ),
       type:'success',
       icon:"nc-icon nc-check-2",
-      autoDismiss: 7,
+      autoDismiss: 3.5,
       };
       notificationAlertRef.current.notificationAlert(options);
       //e.preventDefault();
@@ -89,7 +91,7 @@ function Book() {
       errorNotify(place, "Email field is empty");
       flag = false ;
     }
-    if (!("description" in data)) {
+    if (!("details" in data)) {
       errorNotify(place, "Details field is empty");
       flag = false ;
     }
@@ -97,7 +99,7 @@ function Book() {
       errorNotify(place, "Title field is empty");
       flag = false ;
     }
-    if (!("seminardate" in data)) {
+    if (!("date" in data)) {
       errorNotify(place, "Date field is empty");
       flag = false ;
     }
@@ -108,35 +110,35 @@ function Book() {
         errorNotify(place, "Date cannot be earlier than today");
         flag = false ;
       }
-    if (!("seminarstart" in data)) {
+    if (!("start_time" in data)) {
       errorNotify(place, "Start time field is empty");
       flag = false ;
     }
-    if (!("seminarend" in data)) {
+    if (!("end_time" in data)) {
       errorNotify(place, "End time field is empty");
       flag = false ;
     }
-    if (data.seminarstart >= data.seminarend) {
+    if (data.start_time >= data.end_time) {
       errorNotify(place, "Start time cannot be earlier than end time");
       flag = false ;
     }
-    if (!("venue" in data)) {
+    if (!("room" in data)) {
       errorNotify(place, "Room field is empty");
       flag = false ;
     }
-    if (data.venue === 'Default Room') {
-      errorNotify(place, "Room field is empty");
+    if (data.room === 'Default Room') {
+      errorNotify(place, "Room field is empty, set to default placeholder");
       flag = false ;
     }
     return flag;
   }
-  function handlesubmit(e, place, type) {
+  async function handlesubmit(e, place, type) {
         
     e.preventDefault();
     const data = serialize(e.target, { hash: true, disabled: true });
-    let appendedData = { ...data, venue: roomstate };
+    let appendedData = { ...data, room: roomstate };
     if(!('CSMAIL' in appendedData))
-      appendedData = {...appendedData, CSMAIL:false};
+      appendedData = {...appendedData, CSMAIL: false};
     if (!('AIMAIL' in appendedData))
       appendedData = { ...appendedData, AIMAIL: false };
     if (!('hours2' in appendedData))
@@ -146,15 +148,42 @@ function Book() {
 
     if(checkForSanity(appendedData, place))
     {
-      notify(e, place);
+      
       console.log(appendedData);
-      // formRef.current.reset();
+      console.log("Form will be submitted with the above data");
+      formRef.current.reset();
+      console.log(`${backendServerLocation}`);
+      
+      const response = await fetch(`${backendServerLocation}/create_request`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type' : 'application/json'
+        },
+        body: JSON.stringify(appendedData)
+        }
+      );
+      const responsedata = await response.json(); 
+      console.log("we got the response from the api endpoint");
+      if(!response.ok)
+      {
+        const message = `an error occurred: ${response.status} ${response.statusText}`;
+        throw new Error(message);
+      }
+      console.log("Request went through ");
+      console.log(responsedata);
+
+
+      notify(e, place); //change this to be on success of API call
     }
     else{
       // errorNotify(place, type);
       console.log("Error, data not valid");
     }
-      
+    
+    handlesubmit().catch(error =>{
+      error.message;
+    })
+    
     
   
     // const isAIChecked = data.AIMAIL === 'on';
@@ -189,7 +218,7 @@ function Book() {
           <Col md="8">
             <Card>
               <Card.Header>
-                <Card.Title as="h4">{userType === "admin"?"Book a Request for admins" : "Book a request"}</Card.Title>
+                <Card.Title as="h4">Book a request</Card.Title>
                 <p className="card-category">
                     This form is for submitting a request for a seminar. It will be reviewed by the admins of the service and accepted if the criteria are satisfied. 
                 </p>
@@ -241,7 +270,7 @@ function Book() {
                       <Form.Group>
                         <label>Date Of Seminar(dd/mm/yyyy)*</label>
                          <Form.Control
-                          name = "seminardate"
+                          name = "date"
                           placeholder="dd/mm/yyyy"
                           type="date"
                         >
@@ -254,7 +283,7 @@ function Book() {
                       <Form.Group>
                         <label>Start Time*</label>
                         <Form.Control
-                          name = "seminarstart"
+                          name = "start_time"
                           placeholder="hh:mm"
                           type="time"
                         >
@@ -266,7 +295,7 @@ function Book() {
                       <Form.Group>
                         <label>End Time*</label>
                         <Form.Control
-                          name = "seminarend"
+                          name = "end_time"
                           placeholder="hh:mm"
                           type="time"
                         >
@@ -302,7 +331,7 @@ function Book() {
                   <Row>
                     <Col md="12">
                       <Form.Group>
-                        <label>Title of the Seminar*</label>
+                        <label>Title of the Seminar* (in brief)</label>
                         <Form.Control
                           cols="80"
                           placeholder="Here can be your description"
@@ -321,7 +350,7 @@ function Book() {
                           cols="80"
                           placeholder="Here can be your description"
                           rows="3"
-                          name ="description"
+                          name ="details"
                           as="textarea"
                         ></Form.Control>
                       </Form.Group>
