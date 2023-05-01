@@ -53,42 +53,26 @@ def view_user_requests():
 # Creating a request
 @app.route('/booking_request', methods=['PUT'])
 def booking_request():
-    request_data = request.get_json()
-    success, msg = RequestsList.add_new_request(request_data)
-
-    if success:
-        return make_response({'Response': msg}, 200)
-    return make_response({'Response': msg}, 400)
+    success, msg, conflicting_accepted_requests = RequestsList.add_new_request(request = request.get_json())
+    return make_response({'Response': msg, 'Conflicting seminars': conflicting_accepted_requests}, 200 if success else 400)
 
 # accept a request
 @app.route('/accept_request', methods=['PATCH'])
 def accept_request():
-    request_data = request.get_json()
-    success, msg = RequestsList.accept_request(request_data)
-
-    if success:
-        return make_response({'Response': msg}, 200)
-    return make_response({'Response': msg}, 400)
+    success, msg, conflicting_requests = RequestsList.accept_request(request_id = request.get_json()['request_id'])
+    return make_response({'Response': msg, 'Conflicting seminars': conflicting_requests}, 200 if success else 400)
 
 # reject a request
 @app.route('/reject_request', methods=['PATCH'])
 def reject_request():
-    request_data = request.get_json()
-    success, msg = RequestsList.reject_request(request_data)
-
-    if success:
-        return make_response({'Response': msg}, 200)
-    return make_response({'Response': msg}, 400)
+    success, msg = RequestsList.reject_request(request_id = request.get_json()['request_id'])
+    return make_response({'Response': msg}, 200 if success else 400)
 
 # cancel request
 @app.route('/cancel_request')
 def cancel_request():
-    request_data = request.json()
-    success, msg = RequestsList.cancel_request(request_data)
-
-    if success:
-        return make_response({'Response': msg}, 200)
-    return make_response({'Response': msg}, 400)
+    success, msg = RequestsList.cancel_request(request_id = request.get_json()['request_id'])
+    return make_response({'Response': msg}, 200 if success else 400)
 
 
 ############## Admin Management Functions ##############
@@ -101,40 +85,23 @@ def view_admins_list():
 
 @app.route('/add_admin', methods=['PUT'])
 def add_admin():
-    admin_data = request.get_json()
-    success, msg = AdminList.add_admin(admin_data)
-    
-    if success:
-        return make_response({'Resonse': msg}, 200)
-    return make_response({'Resonse': msg}, 400)
-
+    success, msg = AdminList.add_admin(admin = request.get_json())
+    return make_response({'Response': msg}, 200 if success else 400)
 
 @app.route('/delete_admin', methods=['DELETE'])
 def delete_admin():
-    admin_data = request.get_json()
-    success, msg = AdminList.delete_admin(admin_data)
-
-    if success:
-        return make_response({'Response': msg}, 200)
-    return make_response({'Response': msg}, 400)
+    success, msg = AdminList.delete_admin(admin = request.get_json())
+    return make_response({'Response': msg}, 200 if success else 400)
     
-
 @app.route('/make_super_admin', methods=['PATCH'])
 def make_super_admin():
-    admin_data = request.get_json()
-    success, msg = AdminList.make_super_admin(admin_data)
-
-    if success:
-        return make_response({'Response': msg}, 200)
-    return make_response({'Response': msg}, 400)
+    success, msg = AdminList.make_super_admin(admin = request.get_json())
+    return make_response({'Response': msg}, 200 if success else 400)
     
-
 @app.route('/check_user_state', methods=['GET'])
 def check_user_state():
-    admin_data = request.get_json()
-    state = AdminList.check_user_level(admin_data)
-    reply = {'state': state}
-    return reply.jsonify()
+    state = AdminList.check_user_level(admin = request.get_json())
+    return {'state': state}.jsonify()
 
     
         

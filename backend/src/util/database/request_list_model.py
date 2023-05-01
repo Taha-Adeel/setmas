@@ -1,5 +1,5 @@
 from . import db
-from datetime import time, datetime
+from datetime import datetime
 
 class BookingRequestModel(db.Model):
     __tablename__ = 'Booking_Requests'
@@ -30,7 +30,7 @@ class BookingRequestModel(db.Model):
    
     def to_dict(self):
         return {
-            'requestID': self.request_id,
+            'request_id': self.request_id,
             'name': self.name,
             'email': self.email,
             'date': self.date,
