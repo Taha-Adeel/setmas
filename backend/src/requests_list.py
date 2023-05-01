@@ -2,6 +2,7 @@ from util.database.request_list_model import BookingRequestModel
 from util.database import db
 from flask import jsonify
 from datetime import datetime
+from util.mailer import Mailer
 
 class RequestsList:
     """
@@ -73,10 +74,10 @@ class RequestsList:
             status='Pending'
         )
         
-        # Add the new booking request to the database
+        # Add the new booking request to the database and mail the user
         db.session.add(booking_request)
         db.session.commit()
-        # TODO: Send mail to the user
+        Mailer.request_submission_notif(request['email'], str(booking_request))
 
         return True, 'Booking request successfully made.', None
 
@@ -104,17 +105,17 @@ class RequestsList:
         if conflicting_accepted_requests:
             return False, 'There are conflicts with accepted requests.', conflicting_accepted_requests
         
-        # Accept the request
+        # Accept the request and mail the user
         request.status = 'Accepted'
         db.session.commit()
-        # TODO: Send mail to the user
+        Mailer.request_accepted_notif(request.email, str(request))
 
-        # Reject all the conflicting pending requests
+        # Reject all the conflicting pending requests and mail the users
         conflicting_pending_requests = RequestsList.get_conflicting_requests(request.to_dict(), 'Pending')
         for conflicting_request in conflicting_pending_requests:
             conflicting_request = BookingRequestModel.query.filter(BookingRequestModel.request_id == conflicting_request['request_id']).first()
             conflicting_request.status = 'Rejected'
-            # TODO: Send mail to the user
+            Mailer.request_rejected_notif(conflicting_request.email, str(conflicting_request))
         db.session.commit()
 
         return True, 'Request accepted successfully', conflicting_pending_requests
@@ -137,10 +138,10 @@ class RequestsList:
         if request.status != 'Pending':
             return False, 'Request is already' + request.status.lower() + '.'
         
-        # Reject the request
+        # Reject the request and inform the users
         request.status = 'Rejected'
         db.session.commit()
-        # TODO: Send mail to the user
+        Mailer.request_rejected_notif(request.email, str(request))
 
         return True, 'Request rejected successfully'
         
@@ -162,10 +163,10 @@ class RequestsList:
         if request.status != 'Accepted':
             return False, 'Cannot cancel a request that is not accepted.'
         
-        # Cancel the request
+        # Cancel the request and mail the user
         request.status = 'Cancelled'
         db.session.commit()
-        # TODO: Send mail to the user
+        Mailer.request_cancelled_notif(request.email, str(request))
 
         return True, 'Request cancelled successfully'
     
