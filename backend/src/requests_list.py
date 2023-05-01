@@ -45,13 +45,13 @@ class RequestsList:
         return True, 'Request added successfully'
 
     def accept_request(request):
-        accept = BookingRequestModel.query.filter(BookingRequestModel.requestID == request['requestID']).first()
+        accept = BookingRequestModel.query.filter(BookingRequestModel.request_id == request['requestID']).first()
         accept.status = 'Accepted'
         db.session.commit()
         return True, 'Request accepted successfully'
 
     def reject_request(request):
-        accept = BookingRequestModel.query.filter(BookingRequestModel.requestID == request['requestID']).first()
+        accept = BookingRequestModel.query.filter(BookingRequestModel.request_id == request['requestID']).first()
         accept.status = 'Rejected'
         db.session.commit()
         return True, 'Request rejected successfully'
