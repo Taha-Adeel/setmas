@@ -5,6 +5,10 @@ This module provides a simple interface for sending email notifications using Fl
 import os
 from flask_mail import Mail, Message
 from app import app
+from apscheduler.schedulers.background import BackgroundScheduler
+import atexit
+from datetime import datetime
+
 
 # Set the mail server configuration variables
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -15,6 +19,12 @@ app.config['MAIL_PASSWORD'] = 'nkryqhcbrabdgwkn'
 
 # Initialize the Mail object
 mail = Mail(app)
+
+# Initialize the scheduler
+scheduler = BackgroundScheduler()
+scheduler.start()
+atexit.register(lambda: scheduler.shutdown())
+
 
 class Mailer:
     """ The Mailer class is responsible for sending various email notifications. """
@@ -63,7 +73,6 @@ class Mailer:
         except Exception as e:
             return  f'Error sending email: {str(e)}'
         
-
     def request_cancelled_notif(email, request):
         """
         Sends an email notification to the user about their cancelled booking request.
@@ -116,3 +125,28 @@ class Mailer:
         except Exception as e:
             return  f'Error sending email: {str(e)}'
 
+    def send_scheduled_email(email, subject, body, scheduled_time: datetime):
+        job = scheduler.add_job(Mailer._send_email, 'date', run_date=scheduled_time,
+                                args=[email, subject, body])
+        return job.id
+    
+    def _send_email(email, subject, body):
+        try:
+            msg = Message(subject=subject, sender = Mailer.mail_username, recipients=[email])
+            msg.body = body
+            mail.send(msg)
+            return 'Email sent'
+        except Exception as e:
+            return  f'Error sending email: {str(e)}'
+        
+    def send_reminder_mail(email, request):
+        """
+        Sends an email notification to the user about their accepted booking request.
+        """
+        try:
+            msg = Message(subject='Booking Request Status', sender = Mailer.mail_username, recipients=[email])
+            msg.body = f'Dear User,\nYour booking request for {request} is due in 2 days.'
+            mail.send(msg)
+            return 'Email sent'
+        except Exception as e:
+            return  f'Error sending email: {str(e)}'
