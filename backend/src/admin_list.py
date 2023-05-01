@@ -1,6 +1,7 @@
 from util.database.admin_list_model import AdminModel
 from util.database import db
-from flask import jsonify, request
+from flask import jsonify
+from util.mailer import Mailer
 
 class AdminList:
     """
@@ -36,11 +37,11 @@ class AdminList:
         if existing_admin is not None:
             return False, 'Error: Admin already exists'
 
-        # Add the new admin to the database
+        # Add the new admin to the database and send a mail
         new_admin = AdminModel(email=admin['email'], isSuperAdmin='NO')
         db.session.add(new_admin)
         db.session.commit()
-        # TODO: add function to send admin addition mail
+        Mailer.new_admin_status(admin['email'])
 
         return True, 'Admin successfully added'
 
@@ -62,10 +63,10 @@ class AdminList:
         if del_admin.isSuperAdmin == 'YES':
             return False, 'Error: Cannot delete SuperAdmin'
 
-        # Delete the admin from the database
+        # Delete the admin from the database and send a mail
         db.session.delete(admin)
         db.session.commit()
-        # TODO: add function to send admin deletion mail
+        Mailer.delete_admin_status(admin['email'])
 
         return True, 'Admin successfully deleted'
 
@@ -94,11 +95,11 @@ class AdminList:
         if emails['super'] == emails['admin']:
             return False, 'User is already a Super Admin'
 
-        # Change the super admin
+        # Change the super admin and send them mails
         cur_super.isSuperAdmin = 'NO'
         new_super.isSuperAdmin = 'YES'
         db.session.commit()
-        # TODO: add function to send mail to new super and old super
+        Mailer.super_admin_status(old_superAdmin_email=emails['super'], new_superAdmin_email=emails['email'])
 
         return True, 'Super Admin changed'
 
