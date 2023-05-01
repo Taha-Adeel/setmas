@@ -71,7 +71,13 @@ class RequestsList:
             end_time=request['end_time'],
             title=request['title'],
             details=request['details'],
-            status='Pending'
+            status='Pending',
+            dept=request['dept'],
+            csmail=request['csmail'],
+            aimail=request['aimail'],
+            hours2=request['hours2'],
+            days1=request['days1']
+
         )
         
         # Add the new booking request to the database and mail the user
