@@ -7,7 +7,7 @@ from flask_mail import Mail, Message
 from app import app
 from apscheduler.schedulers.background import BackgroundScheduler
 import atexit
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 # Set the mail server configuration variables
@@ -141,12 +141,10 @@ class Mailer:
         
     def send_reminder_mail(email, request):
         """
-        Sends an email notification to the user about their accepted booking request.
+        Sends a scheduled email notification to the user about their accepted booking request.
         """
         try:
-            msg = Message(subject='Booking Request Status', sender = Mailer.mail_username, recipients=[email])
-            msg.body = f'Dear User,\nYour booking request for {request} is due in 2 days.'
-            mail.send(msg)
-            return 'Email sent'
+            reminder_time = request.start_time - timedelta(hours=2)
+            Mailer.send_scheduled_email(email, 'Reminder', f'Dear User,\nYour booking request for {request} is scheduled to start in 2 hours.', reminder_time)
         except Exception as e:
             return  f'Error sending email: {str(e)}'

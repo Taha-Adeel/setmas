@@ -109,6 +109,7 @@ class RequestsList:
         request.status = 'Accepted'
         db.session.commit()
         Mailer.request_accepted_notif(request.email, str(request))
+        Mailer.send_reminder_mail(request.email, request)
 
         # Reject all the conflicting pending requests and mail the users
         conflicting_pending_requests = RequestsList.get_conflicting_requests(request.to_dict(), 'Pending')
