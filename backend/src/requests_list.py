@@ -25,8 +25,8 @@ class RequestsList:
         """
 
         # Convert the request start time and end time strings to time objects
-        start_time = datetime.strptime(request_data['start_time'], '%H-%M').time()
-        end_time = datetime.strptime(request_data['end_time'], '%H-%M').time()
+        start_time = datetime.strptime(request_data['start_time'], '%H:%M').time()
+        end_time = datetime.strptime(request_data['end_time'], '%H:%M').time()
 
         # Query for all the requests that conflict with the given request (The end points are allowed to overlap)
         conflicting_requests_list = BookingRequestModel.query.filter(

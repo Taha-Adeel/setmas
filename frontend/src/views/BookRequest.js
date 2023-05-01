@@ -154,7 +154,7 @@ function Book() {
       formRef.current.reset();
       console.log(`${backendServerLocation}`);
       
-      const response = await fetch(`${backendServerLocation}/create_request`, {
+      const response = await fetch(`${backendServerLocation}/booking_request`, {
         method: 'PUT',
         headers: {
           'Content-Type' : 'application/json'

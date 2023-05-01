@@ -41,8 +41,9 @@ class BookingRequestModel(db.Model):
         """ Initializes a new instance of the `BookingRequestModel` class. """
         self.name = name
         self.email = email
-        self.start_time = datetime.strptime(start_time, '%H-%M').time()
-        self.end_time = datetime.strptime(end_time, '%H-%M').time()
+        self.start_time = datetime.strptime(start_time, '%H:%M').time()
+        self.end_time = datetime.strptime(end_time, '%H:%M').time()
+        self.date = date
         self.room = room
         self.title = title
         self.details = details
@@ -59,8 +60,8 @@ class BookingRequestModel(db.Model):
             'name': self.name,
             'email': self.email,
             'date': self.date,
-            'start_time': self.start_time.strftime('%H-%M'),
-            'end_time': self.end_time.strftime('%H-%M'),
+            'start_time': self.start_time.strftime('%H:%M'),
+            'end_time': self.end_time.strftime('%H:%M'),
             'room': self.room,
             'title': self.title,
             'details': self.details,
