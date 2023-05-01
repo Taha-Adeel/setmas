@@ -33,6 +33,7 @@ from flask_cors import CORS
 from util.database import db, create_db_tables
 from admin_list import AdminList
 from requests_list import RequestsList
+from util.mailer import Mailer, init_mailer
 
 # Initialize the app
 app = Flask(__name__)
@@ -44,6 +45,13 @@ app.config['CORS_ORIGINS'] = ['http://localhost:3000']
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(os.path.join(os.path.abspath(os.path.dirname(__file__)), '../data'), 'database.sqlite')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+# Set the mail server configuration variables
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = 'setmasiith@gmail.com'
+app.config['MAIL_PASSWORD'] = 'nkryqhcbrabdgwkn'
+
 # Initialize the database
 db.init_app(app)
 
@@ -51,6 +59,7 @@ db.init_app(app)
 @app.before_first_request
 def create_tables():
     create_db_tables(app)
+    init_mailer(app)
 
 ############## View requests ##############
 
