@@ -65,13 +65,13 @@ export default class AcceptRequestsClass extends Component {
                 'Content-Type': 'application/json'
               },
               body: JSON.stringify({
-                requestID: pendingRequest.requestID
+                request_id: pendingRequest.request_id
               })
             })
               .then(response => response.json())
               .then(dataa => {
                 console.log(dataa);
-                this.state.data = this.state.data.filter(entry => entry.requestID!=pendingRequest.requestID);
+                this.state.data = this.state.data.filter(entry => entry.request_id!=pendingRequest.request_id);
               })
               .catch(error => {
                 console.error(error);
@@ -90,13 +90,13 @@ export default class AcceptRequestsClass extends Component {
                 'Content-Type': 'application/json'
               },
               body: JSON.stringify({
-                requestID: pendingRequest.requestID
+                request_id: pendingRequest.request_id
               })
             })
             .then(response => response.json())
             .then(data => {
               console.log(data);
-              this.setState(this.state.data.filter(entry => entry.requestID != pendingRequest.requestID));
+              this.setState(this.state.data.filter(entry => entry.request_id != pendingRequest.request_id));
             })
             .catch(error => {
               console.error(error);
