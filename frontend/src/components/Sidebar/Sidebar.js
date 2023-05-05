@@ -72,7 +72,7 @@ function Sidebar({ color, image, routes }) {
               <img src={require("assets/img/IIT_Hyderabad_Insignia.svg.png")} alt="..." />
             </div>
           </a>
-          <a className="simple-text" href="https://www.iith.ac.in">
+          <a className="simple-text" href="https://www.iith.ac.in" style={{textTransform: "none"}}>
             SeTMaS
           </a>
         </div>

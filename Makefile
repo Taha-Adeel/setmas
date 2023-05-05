@@ -2,7 +2,7 @@
 
 all: dependencies
 	make backend&
-	make frontend&
+	make frontend
 
 dependencies:
 	cd backend && make dependencies
@@ -17,3 +17,7 @@ frontend:
 clean:
 	cd backend && make clean
 	cd frontend && rm -rf node_modules
+
+stop:
+	fuser -k 3000/tcp 
+	fuser -k 5000/tcp
