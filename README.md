@@ -21,7 +21,7 @@
 
 ## Description
 SETMaS is an innovative application that streamlines the organization of events in educational institutions by automating the request processing and approval process. With its user-friendly interface and powerful features, SETMaS simplifies the task of managing events, saves valuable time, and significantly reduces the administrative burden on the institution.
-
+![img](images/ss.jpeg "Title Page")
 This project was done as a part of the SWE course in the sixth semester at IIT Hyderabad.
 
 ## Installing Dependencies
