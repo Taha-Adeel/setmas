@@ -44,6 +44,7 @@ app.config['SECRET_KEY'] = 'mysecretkey'
 app.config['CORS_ORIGINS'] = ['http://localhost:3000']
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(os.path.join(os.path.abspath(os.path.dirname(__file__)), '../data'), 'database.sqlite')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# app.config['CORS_HEADERS'] = 'Content-Type'
 
 # Set the mail server configuration variables
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -84,7 +85,7 @@ def view_rejected_requests():
     return RequestsList.get_rejected_requests()
 
 # View booking requests made by a specific user. Only that user can access this endpoint (and admins and superadmins).
-@app.route('/user_requests', methods=['GET'])
+@app.route('/user_requests', methods=['GET', 'POST'])
 def view_user_requests():
     user = request.get_json()
     return RequestsList.get_user_requests(user)
@@ -117,10 +118,12 @@ def reject_request():
     return make_response({'Response': msg}, 200 if success else 400)
 
 # Cancel an accepted booking request. Only the user who made the request can access this endpoint (and admins and superadmins).
-@app.route('/cancel_request')
+@app.route('/cancel_request', methods=['POST'])
 def cancel_request():
     success, msg = RequestsList.cancel_request(request_id = request.get_json()['request_id'])
-    return make_response({'Response': msg}, 200 if success else 400)
+    # response = {'Resource': msg}
+    # response.headers.add('Access-Control-Allow-Origin', '*')
+    return make_response({'Response': msg}, 200 if success else 400).headers.add('Access-Control-Allow-Origin', '*')
 
 
 ############## Manage admins ##############

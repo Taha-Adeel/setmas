@@ -135,7 +135,9 @@ class Mailer:
         Sends a scheduled email notification to the user about their accepted booking request.
         """
         try:
-            reminder_time = request.start_time - timedelta(hours=2)
+            start_time = datetime.strptime(str(request.start_time), '%H:%M').time()
+            date = datetime.strptime(request.date, '%Y-%m-%d').date()
+            reminder_time = datetime.combine(date, start_time) - timedelta(hours=2)
             Mailer.send_scheduled_email(email, 'Reminder', f'Dear User,\nYour booking request for {request} is scheduled to start in 2 hours.', reminder_time)
         except Exception as e:
             return  f'Error sending email: {str(e)}'

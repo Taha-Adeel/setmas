@@ -36,17 +36,28 @@ class BookingRequestModel(db.Model):
     title = db.Column(db.String(150), nullable=False)
     details = db.Column(db.String(800), nullable=False)
     status = db.Column(db.String(80), nullable=False)
+    dept = db.Column(db.String(80), nullable=False)
+    csmail = db.Column(db.Boolean, default=False)
+    aimail = db.Column(db.Boolean, default=False)
+    hours2 = db.Column(db.Boolean, default=False)
+    days1 = db.Column(db.Boolean, default=False)
 
-    def __init__(self, name, email, date, start_time, end_time, room, title, details, status):
+    def __init__(self, name, email, date, start_time, end_time, room, title, details, status, dept, csmail, aimail, hours2, days1):
         """ Initializes a new instance of the `BookingRequestModel` class. """
         self.name = name
         self.email = email
-        self.start_time = datetime.strptime(start_time, '%H-%M').time()
-        self.end_time = datetime.strptime(end_time, '%H-%M').time()
+        self.start_time = datetime.strptime(start_time, '%H:%M').time()
+        self.end_time = datetime.strptime(end_time, '%H:%M').time()
+        self.date = date
         self.room = room
         self.title = title
         self.details = details
         self.status = status
+        self.dept = dept
+        self.csmail = csmail
+        self.aimail = aimail
+        self.hours2 = hours2
+        self.days1 = days1
 
     def __repr__(self):
         """ Returns a string representation of the booking request entry. """
@@ -59,10 +70,15 @@ class BookingRequestModel(db.Model):
             'name': self.name,
             'email': self.email,
             'date': self.date,
-            'start_time': self.start_time.strftime('%H-%M'),
-            'end_time': self.end_time.strftime('%H-%M'),
+            'start_time': self.start_time.strftime('%H:%M'),
+            'end_time': self.end_time.strftime('%H:%M'),
             'room': self.room,
             'title': self.title,
             'details': self.details,
-            'status': self.status
+            'status': self.status,
+            'dept': self.dept,
+            'csmail': self.csmail,
+            'aimail': self.aimail,
+            'hours2': self.hours2,
+            'days1':  self.days1
         }
