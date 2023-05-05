@@ -4,21 +4,12 @@ This module provides a simple interface for sending email notifications using Fl
 
 import os
 from flask_mail import Mail, Message
-from app import app
 from apscheduler.schedulers.background import BackgroundScheduler
 import atexit
 from datetime import datetime, timedelta
 
-
-# Set the mail server configuration variables
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'setmasiith@gmail.com'
-app.config['MAIL_PASSWORD'] = 'nkryqhcbrabdgwkn'
-
-# Initialize the Mail object
-mail = Mail(app)
+def init_mailer(app):
+    Mailer.mail = Mail(app)
 
 # Initialize the scheduler
 scheduler = BackgroundScheduler()
@@ -44,7 +35,7 @@ class Mailer:
         try:
             msg = Message(subject='Booking Request Status', sender = Mailer.mail_username, recipients=[email])
             msg.body = f'Dear User,\nYour booking request for {request} has been submitted.'
-            mail.send(msg)
+            Mailer.mail.send(msg)
             return 'Email sent'
         except Exception as e:
             return  f'Error sending email: {str(e)}'
@@ -56,7 +47,7 @@ class Mailer:
         try:
             msg = Message(subject='Booking Request Status', sender = Mailer.mail_username, recipients=[email])
             msg.body = f'Dear User,\nYour booking request for {request} has been accepted.'
-            mail.send(msg)
+            Mailer.mail.send(msg)
             return 'Email sent'
         except Exception as e:
             return  f'Error sending email: {str(e)}'
@@ -68,7 +59,7 @@ class Mailer:
         try:
             msg = Message(subject='Booking Request Status', sender = Mailer.mail_username, recipients=[email])
             msg.body = f'Dear User,\nYour booking request for {request} has been rejected.'
-            mail.send(msg)
+            Mailer.mail.send(msg)
             return 'Email sent'
         except Exception as e:
             return  f'Error sending email: {str(e)}'
@@ -80,7 +71,7 @@ class Mailer:
         try:
             msg = Message(subject='Booking Request Status', sender = Mailer.mail_username, recipients=[email])
             msg.body = f'Dear User,\nYour booking request for {request} has been cancelled.'
-            mail.send(msg)
+            Mailer.mail.send(msg)
             return 'Email sent'
         except Exception as e:
             return  f'Error sending email: {str(e)}'
@@ -92,7 +83,7 @@ class Mailer:
         try:
             msg = Message(subject='Change in Status', sender = Mailer.mail_username, recipients=[email])
             msg.body = "Dear User,\nYou've been added as an admin."
-            mail.send(msg)
+            Mailer.mail.send(msg)
             return 'Email sent'
         except Exception as e:
             return  f'Error sending email: {str(e)}'
@@ -104,7 +95,7 @@ class Mailer:
         try:
             msg = Message(subject='Change in Status', sender = Mailer.mail_username, recipients=[email])
             msg.body = "Dear User,\nYou've been removed as an admin."
-            mail.send(msg)
+            Mailer.mail.send(msg)
             return 'Email sent'
         except Exception as e:
             return  f'Error sending email: {str(e)}'
@@ -116,11 +107,11 @@ class Mailer:
         try:
             msg = Message(subject='Change in Status', sender = Mailer.mail_username, recipients=[new_superAdmin_email])
             msg.body = "Dear User,\nYou've been promoted to Super Admin."
-            mail.send(msg)
+            Mailer.mail.send(msg)
 
             msg = Message(subject='Change in Status', sender = Mailer.mail_username, recipients=[old_superAdmin_email])
             msg.body = "Dear User,\nYou've been demoted to Admin."
-            mail.send(msg)
+            Mailer.mail.send(msg)
             return 'Email sent'
         except Exception as e:
             return  f'Error sending email: {str(e)}'
@@ -134,7 +125,7 @@ class Mailer:
         try:
             msg = Message(subject=subject, sender = Mailer.mail_username, recipients=[email])
             msg.body = body
-            mail.send(msg)
+            Mailer.mail.send(msg)
             return 'Email sent'
         except Exception as e:
             return  f'Error sending email: {str(e)}'
@@ -144,7 +135,9 @@ class Mailer:
         Sends a scheduled email notification to the user about their accepted booking request.
         """
         try:
-            reminder_time = request.start_time - timedelta(hours=2)
+            start_time = datetime.strptime(str(request.start_time), '%H:%M').time()
+            date = datetime.strptime(request.date, '%Y-%m-%d').date()
+            reminder_time = datetime.combine(date, start_time) - timedelta(hours=2)
             Mailer.send_scheduled_email(email, 'Reminder', f'Dear User,\nYour booking request for {request} is scheduled to start in 2 hours.', reminder_time)
         except Exception as e:
             return  f'Error sending email: {str(e)}'

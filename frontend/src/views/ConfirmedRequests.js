@@ -66,19 +66,19 @@ export default class ConfirmRequestsClass extends Component {
           () => { 
             console.log('Cancel is clicked');
             console.log(confirmedRequest);
-            fetch(`http://127.0.0.1:5000/reject_request`, {
-              method: 'PATCH',
+            fetch(`http://127.0.0.1:5000/cancel_request`, {
+              method: 'POST',
               headers: {
                 'Content-Type': 'application/json'
               },
               body: JSON.stringify({
-                requestID: confirmedRequest.requestID
+                request_id: confirmedRequest.request_id
               })
             })
               .then(response => response.json())
               .then(dataa => {
                 console.log(dataa);
-                this.state.data = this.state.data.filter(entry => entry.requestID != confirmedRequest.requestID);
+                this.state.data = this.state.data.filter(entry => entry.request_id != confirmedRequest.request_id);
               })
               .catch(error => {
                 console.error(error);
