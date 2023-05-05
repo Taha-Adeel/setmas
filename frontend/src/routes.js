@@ -64,42 +64,6 @@ const dashboardRoutes = [
     requiresLogin: true
   },
   {
-    path: "/typography",
-    name: "Typography",
-    icon: "nc-icon nc-paper-2",
-    component: Typography,
-    layout: "/admin",
-    requiresAdmin: false,
-    requiresLogin: true
-  },
-  {
-    path: "/icons",
-    name: "Icons",
-    icon: "nc-icon nc-atom",
-    component: Icons,
-    layout: "/admin",
-    requiresAdmin: false,
-    requiresLogin: true
-  },
-  {
-    path: "/maps",
-    name: "Maps",
-    icon: "nc-icon nc-pin-3",
-    component: Maps,
-    layout: "/admin",
-    requiresAdmin: false,
-    requiresLogin: true
-  },
-  {
-    path: "/notifications",
-    name: "Notifications",
-    icon: "nc-icon nc-bell-55",
-    component: Notifications,
-    layout: "/admin",
-    requiresAdmin: false,
-    requiresLogin: true
-  },
-  {
     path: "/acceptrequests",
     name: "Accept Requests",
     icon: "nc-icon nc-tap-01",
